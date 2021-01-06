@@ -55,7 +55,7 @@ public class VariableFactory {
      * @return
      */
     public static Variable createNewVar(String name, String type, String value, boolean isFinal) throws MethodException {
-        if (checkValidName(name) && checkValidType(type, value)){
+        if (checkValidName(name) && checkValidValueType(type, value)){
             Pattern typeRecognizer = typeRecognizerDict.get(type);
             return new Variable(name, type, isFinal, typeRecognizer, value != null);
         } else {
@@ -73,10 +73,12 @@ public class VariableFactory {
     }
 
 
-    private static boolean checkValidType (String varivableType, String varivableValue){
+    private static boolean checkValidValueType(String varivableType, String varivableValue){
         Matcher matcher = typeRecognizerDict.get(varivableType).matcher(varivableValue);
         return matcher.matches();
     }
+
+    private static boolean
 
     private static boolean checkValidName (String variableName ){
         Matcher matcher = NAME_RECOGNIZER.matcher(variableName);
