@@ -19,6 +19,7 @@ public class VariableFactory {
     private final static String BOOLEAN_TYPE = "boolean";
     private final static String STRING_TYPE = "String";
     private final static String CHAR_TYPE = "char";
+    private final static String CHAR = "char";
 
     // variables types patterns
     private final static Pattern INT_RECOGNIZER = Pattern.compile("^\\d++$");
