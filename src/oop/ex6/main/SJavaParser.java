@@ -1,5 +1,6 @@
 package oop.ex6.main;
 
+import oop.ex6.GeneralException;
 import oop.ex6.jacasvariable.Variable;
 import oop.ex6.jacasvariable.VariableFactory;
 import oop.ex6.method.Method;
@@ -29,11 +30,11 @@ public class SJavaParser {
 
 
 
-    public SJavaParser(String sourceFilePath) throws FileNotFoundException {
+    public SJavaParser(String sourceFilePath) throws FileNotFoundException{
         fileReader = new LineNumberReader(new FileReader(new File(sourceFilePath)));
     }
 
-    public void getGlobalMethodsVariables() throws IOException, MethodException {
+    public void getGlobalMethodsVariables() throws IOException, GeneralException {
         line = fileReader.readLine();
         while (line != null){
             if (line.matches(COMMENT_LINE_REGEX) || line.matches(EMPTY_LINE_REGEX)){
@@ -49,7 +50,7 @@ public class SJavaParser {
         }
     }
 
-    private void VarLine(Map<String, Variable> scopeVariables, String varLine) throws MethodException {
+    private void VarLine(Map<String, Variable> scopeVariables, String varLine) throws GeneralException {
         Matcher wordsInLine = Pattern.compile(REGULAR_WORD_SEPARATED).matcher(varLine);
         if (wordsInLine.find()){
             String firstWordInLine = line.substring(wordsInLine.start(), wordsInLine.end());
@@ -73,7 +74,7 @@ public class SJavaParser {
 
     }
 
-    private void makeNewMethod() throws MethodException, IOException {
+    private void makeNewMethod() throws GeneralException, IOException {
         Method newMethod = MethodFactory.createMethod(line);
         int braceBalance = 1;
         line = fileReader.readLine();

@@ -52,21 +52,21 @@ public class VariableFactory {
      * @param isFinal
      * @return
      */
-    public static Variable createNewVar(String name, String type, String value, boolean isFinal) throws MethodException {
+    public static Variable createNewVar(String name, String type, String value, boolean isFinal) throws VariableException {
         if (checkValidName(name) && checkValidValueType(type, value)){
             Pattern typeRecognizer = typeRecognizerDict.get(type);
             return new Variable(name, type, isFinal, typeRecognizer, value != null);
         } else {
-            throw new MethodException("nsadjas"); // todo: exception
+            throw new VariableException();
         }
     }
 
-    public static Variable createNewVar(Variable otherVar ,String name, String type, boolean isFinal) throws MethodException {
+    public static Variable createNewVar(Variable otherVar ,String name, String type, boolean isFinal) throws VariableException {
         if (checkValidName(name) && type.equals(otherVar.getType())){
             Pattern typeRecognizer = typeRecognizerDict.get(type);
             return new Variable(name, type, isFinal, typeRecognizer, otherVar.isInitialised());
         } else {
-            throw new MethodException("asndjnj"); // todo: exception
+            throw new VariableException();
         }
     }
 
@@ -76,9 +76,9 @@ public class VariableFactory {
         return matcher.matches();
     }
 
-    public static boolean checkValidType(String type) throws MethodException {
+    public static boolean checkValidType(String type) throws VariableException {
         if (!typeRecognizerDict.containsKey(type)){
-            throw new MethodException("invalid var type");
+            throw new VariableException();
         }
         return true;
     }
@@ -87,39 +87,6 @@ public class VariableFactory {
         Matcher matcher = NAME_RECOGNIZER.matcher(variableName);
         return matcher.matches();
     }
-
-
-//    private static Variable createVariable(String type, String name, boolean isFinal, boolean initialised) throws Exception {
-//        Variable variable;
-//        switch (type){
-//            case INT_TYPE:
-//                variable = new Variable(INT_TYPE, name, isFinal, initialised);
-//            case DOUBLE_TYPE:
-//                variable = new Variable(DOUBLE_TYPE, name, isFinal, initialised);
-//            case BOOLEAN_TYPE:
-//                variable = new Variable(BOOLEAN_TYPE, name, isFinal, initialised);
-//            case STRING_TYPE:
-//                variable = new Variable(STRING_TYPE, name, isFinal, initialised);
-//            case CHAR_TYPE:
-//                variable = new Variable(CHAR_TYPE, name, isFinal, initialised);
-//            default:
-//                //todo: create new exception, delete the next line
-//                throw new Exception();
-//        }
-//        return variable;
-//    }
-
-
-
-    /// type, name
-    /// final, type, name
-    /// type, name
-
-    //todo: check valid type, check valid name - in factory
-
-
-
-
 
 
 }

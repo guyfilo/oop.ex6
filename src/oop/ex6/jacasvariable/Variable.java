@@ -76,13 +76,13 @@ public class Variable {
      * @param newValue - a requested value for the variable
      * @return
      */
-    public void changeValue(String newValue){
+    public void changeValue(String newValue) throws VariableException {
         if (this.isFinal){
-            //todo: trow exception - trying to change final var
+            throw new VariableException();
         }
         Matcher matcher = this.typeRecognizer.matcher(newValue);
         if (!matcher.matches()) {
-            //todo: trow exception - invaldi type
+            throw new VariableException();
         }
         this.initialised = true;
     }
@@ -93,51 +93,14 @@ public class Variable {
      * @param otherVar - a requested value for the variable
      * @return
      */
-    public void changeValue(Variable otherVar){
+    public void changeValue(Variable otherVar) throws VariableException {
         if (this.isFinal){
-            //todo: trow exception - trying to change final var
+            throw new VariableException();
         }
         Matcher matcher = this.typeRecognizer.matcher(otherVar.type);
         if (!matcher.matches()) {
-            //todo: trow exception - invaldi type
+            throw new VariableException();
         }
         this.initialised = true;
     }
-
-//    /**
-//     * this method checks if the newValue type is equal to the variable type
-//     * @param newValue - the new value
-//     * @return - true if the types are equal, false - otherwise
-//     */
-//    private boolean checkValidNewValue(String newValue){
-//
-//        //todo: check in dict by value
-//
-//        if (this.type.equals(INT_TYPE)){
-//            Matcher matcher = INT_RECOGNIZER.matcher(newValue);
-//            return matcher.matches();
-//        }
-//        if (this.type.equals(DOUBLE_TYPE)){
-//            Matcher matcher = DOUBLE_RECOGNIZER.matcher(newValue);
-//            return matcher.matches();
-//        }
-//        if (this.type.equals(BOOLEAN_TYPE)){
-//            Matcher matcher = BOOLEAN_RECOGNIZER.matcher(newValue);
-//            return matcher.matches();
-//        }
-//        if (this.type.equals(STRING_TYPE)){
-//            Matcher matcher = STRING_RECOGNIZER.matcher(newValue);
-//            return matcher.matches();
-//        }
-//        if (this.type.equals(CHAR_TYPE)){
-//            Matcher matcher = CHAR_RECOGNIZER.matcher(newValue);
-//            return matcher.matches();
-//        }
-//        return false;
-//    }
-//
-//
-
-
-
 }
