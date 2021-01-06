@@ -4,7 +4,6 @@ package oop.ex6.jacasvariable;//import oop.ex6.jacasvariable.Variable;
 
 //______________________________________IMPORTS_____________________________________________________________//
 import oop.ex6.method.MethodException;
-
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,8 +18,6 @@ public class VariableFactory {
     private final static String BOOLEAN_TYPE = "boolean";
     private final static String STRING_TYPE = "String";
     private final static String CHAR_TYPE = "char";
-    private final static String CHAR = "char";
-
     // variables types patterns
     private final static Pattern INT_RECOGNIZER = Pattern.compile("^\\d++$");
     private final static Pattern DOUBLE_RECOGNIZER = Pattern.compile("^\\d+.{0,1}\\d*+$");
@@ -74,12 +71,17 @@ public class VariableFactory {
     }
 
 
-    private static boolean checkValidValueType(String varivableType, String varivableValue){
+    public static boolean checkValidValueType(String varivableType, String varivableValue){
         Matcher matcher = typeRecognizerDict.get(varivableType).matcher(varivableValue);
         return matcher.matches();
     }
 
-    private static boolean
+    public static boolean checkValidType(String type) throws MethodException {
+        if (!typeRecognizerDict.containsKey(type)){
+            throw new MethodException("invalid var type");
+        }
+        return true;
+    }
 
     private static boolean checkValidName (String variableName ){
         Matcher matcher = NAME_RECOGNIZER.matcher(variableName);
