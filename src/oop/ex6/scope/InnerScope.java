@@ -10,17 +10,24 @@ public class InnerScope extends Scope {
     //todo: for each method - inner scope
 
     public String[] methodLines;
-    public Map<String,Variable> outerVariables;
+    public Map<String,Variable> scopeVariables;
     public Map<String, Method> globalMethods;
     public int scopeFirstLineIdx;
 
 
-    public InnerScope(String[] methodLines, Map<String,Variable> outerVariables, Map<String, Method> globalMethods, int scopeFirstLineIdx){
+    public InnerScope(String[] methodLines, Map<String,Variable> scopeVariables, Map<String, Method> globalMethods, int scopeFirstLineIdx){
         this.methodLines = methodLines;
-        this.outerVariables = outerVariables;
+        this.scopeVariables = scopeVariables;
         this.globalMethods = globalMethods;
         this.scopeFirstLineIdx = scopeFirstLineIdx;
+    }
 
+    public Map<String, Method> getGlobalMethods() {
+        return globalMethods;
+    }
+
+    public Map<String, Variable> getScopeVariables() {
+        return scopeVariables;
     }
 
     public int checkValidScope() throws InnerScopeException {
@@ -36,7 +43,8 @@ public class InnerScope extends Scope {
                 // todo: check valid decleration line
             }
             else if (LineParser.isNewScopeLine(line)) {
-                InnerScope innerScope = new InnerScope(this.methodLines, this.outerVariables, this.globalMethods,
+                LineParser.checkLoopLine(line, scopeVariables);
+                InnerScope innerScope = new InnerScope(this.methodLines, this.scopeVariables, this.globalMethods,
                         ++curLineIdx);
                 curLineIdx = innerScope.checkValidScope();
             }

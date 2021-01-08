@@ -27,6 +27,7 @@ public class VariableFactory {
 
     // variable valid name pattern
     private final static Pattern NAME_RECOGNIZER = Pattern.compile("^[a-zA-Z]\\w*+|_\\w++$");
+    //todo:add save word check
 
     // type recognizer dict
     public static HashMap<String, Pattern> typeRecognizerDict;

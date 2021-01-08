@@ -2,8 +2,6 @@ package oop.ex6.main;
 
 import oop.ex6.GeneralException;
 import oop.ex6.jacasvariable.Variable;
-import oop.ex6.jacasvariable.VariableException;
-import oop.ex6.jacasvariable.VariableFactory;
 import oop.ex6.method.Method;
 import oop.ex6.method.MethodException;
 import oop.ex6.method.MethodFactory;
@@ -11,8 +9,6 @@ import oop.ex6.method.MethodFactory;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class SJavaParser {
     private final Map<String, Variable> globalVariables = new HashMap<>();
@@ -52,7 +48,7 @@ public class SJavaParser {
                 continue;
             }
             if (line.matches(VAR_DECLARATION_REGEX)){
-                LineParser.varLine(globalVariables, line);
+                LineParser.varLineCheck(line, globalVariables);
             }
             if (line.matches(NEW_SCOPE_REGEX)){
                 makeNewMethod();

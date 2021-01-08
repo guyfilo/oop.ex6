@@ -22,6 +22,8 @@ public class MethodFactory {
     private final static String EMPTY_ARG = "^\\s*+$";
     private final static String METHOD_NAME = "^[a-zA-Z]++\\w*+$";
 
+    //todo:add save word check
+
 
     public static Method createMethod(String methodDeclaration) throws GeneralException {
         matcher = METHOD_DECLARATION.matcher(methodDeclaration);
