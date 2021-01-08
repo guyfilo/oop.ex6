@@ -6,7 +6,6 @@ import oop.ex6.jacasvariable.VariableFactory;
 import oop.ex6.method.Method;
 import oop.ex6.method.MethodException;
 import oop.ex6.method.MethodFactory;
-
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;

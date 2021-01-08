@@ -2,7 +2,6 @@ package oop.ex6.method;
 
 import oop.ex6.GeneralException;
 import oop.ex6.jacasvariable.Variable;
-import oop.ex6.jacasvariable.VariableException;
 import oop.ex6.jacasvariable.VariableFactory;
 
 import java.util.ArrayList;
