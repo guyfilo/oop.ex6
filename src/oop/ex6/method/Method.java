@@ -71,7 +71,7 @@ public class Method {
         String[] args = argsLine.split(",");
         // 1 - check if the args in the scopeVariables
         for (int i = 0; i < args.length; i++) {
-            String argAsString = args[i].strip();
+            String argAsString = args[i].strip(); //todo: no arg contain more than 1 word, check that i went trough all args - and num = args num
             String argValidType = this.arguments.get(i).getType(); // the type the arg should be - the arg is a string
             if (!scopeVariables.containsKey(argAsString)) {
                 checkValidArgAsStringType(argValidType, argAsString);
@@ -80,6 +80,7 @@ public class Method {
                 arg.checkValidValue(argValidType);
             }
         }
+
         return true;
     }
 

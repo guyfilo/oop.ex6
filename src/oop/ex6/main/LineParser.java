@@ -97,7 +97,6 @@ public class LineParser {
             return;
         }
         throw new GeneralException("invalid declaration line");
-
     }
 
     public static boolean isCloseScopeLine(String line){
