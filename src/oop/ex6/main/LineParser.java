@@ -30,6 +30,8 @@ public class LineParser {
     private final static Pattern UNINITIALISED_VAR = Pattern.compile("^\\s*+(\\w++)\\s*+$");
     private final static Pattern INITIALISED_VAR = Pattern.compile("^\\s*+(\\w++)\\s*+=\\s*+(\\S++)\\s*+$");
     private final static String FIRST_WORD_IS_IF_OR_WHILE_REGEX = "^[^}]*+}\\s*+$";
+    private final static String LOOP_PREFIX_REGEX = "^\\s*(?:if|while)\\s+\\(([^\\)]++)\\)\\s*+\\{\\s*+$";
+
 
 
 
