@@ -52,28 +52,12 @@ public class SJavaParser {
                 continue;
             }
             if (line.matches(VAR_DECLARATION_REGEX)){
-                VarLine(globalVariables, line);
+                LineParser.varLine(globalVariables, line);
             }
             if (line.matches(NEW_SCOPE_REGEX)){
                 makeNewMethod();
             } // todo: else trow an exception
         }
-    }
-
-    private void VarLine(Map<String, Variable> scopeVariables, String varLine) throws GeneralException {
-        Matcher wordsInLine = Pattern.compile(REGULAR_WORD_SEPARATED).matcher(varLine);
-        if (wordsInLine.find()){
-            String firstWordInLine = line.substring(wordsInLine.start(), wordsInLine.end());
-            if (scopeVariables.containsKey(firstWordInLine)){
-                changeExistVar(scopeVariables.get(firstWordInLine), varLine);
-                return;
-            }
-            if (VariableFactory.checkValidType(firstWordInLine)){
-                declareNewVar(varLine, scopeVariables);
-                return;
-            }
-        }
-        throw new MethodException("invalid var line");
     }
 
     private void changeExistVar(Variable varToChange, String varLine){

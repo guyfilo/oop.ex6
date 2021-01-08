@@ -4,12 +4,12 @@ import oop.ex6.jacasvariable.Variable;
 import oop.ex6.main.LineParser;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class Method {
     private String name;
     private ArrayList<Variable> arguments;
-    private ArrayList<Variable> localVariables;
-    private ArrayList<String> methodLines;
+    private final ArrayList<String> methodLines = new ArrayList<>();
 
 
 
@@ -35,5 +35,9 @@ public class Method {
             throw new MethodException("method does not contain return line");
         }
         return true;
+    }
+
+    public boolean checkMethodCall(String argsLine, Map<String, Variable> scopeVariables){
+        return false;
     }
 }
