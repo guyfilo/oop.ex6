@@ -1,6 +1,8 @@
 package oop.ex6.method;
 
+import oop.ex6.GeneralException;
 import oop.ex6.jacasvariable.Variable;
+import oop.ex6.jacasvariable.VariableException;
 import oop.ex6.jacasvariable.VariableFactory;
 
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ public class MethodFactory {
     private final static String METHOD_NAME = "^[a-zA-Z]++\\w*+$";
 
 
-    public static Method createMethod(String methodDeclaration) throws MethodException {
+    public static Method createMethod(String methodDeclaration) throws GeneralException {
         matcher = METHOD_DECLARATION.matcher(methodDeclaration);
         if (!matcher.matches()){
             throw new MethodException(ILLEGAL_METHOD_DECLARATION_MSG);
