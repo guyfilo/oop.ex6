@@ -75,15 +75,15 @@ public class VariableFactory {
 
 
     public static boolean checkValidValueType(String varivableType, String varivableValue) {
+        if (varivableValue == null){
+            return true;
+        }
         Matcher matcher = typeRecognizerDict.get(varivableType).matcher(varivableValue);
         return matcher.matches();
     }
 
     public static boolean checkValidType(String type) throws VariableException {
-        if (!typeRecognizerDict.containsKey(type)) {
-            throw new VariableException("invalid variable type");
-        }
-        return true;
+        return typeRecognizerDict.containsKey(type);
     }
 
     private static boolean checkValidName(String variableName) {

@@ -9,6 +9,8 @@ import oop.ex6.method.MethodException;
 import oop.ex6.scope.InnerScope;
 import oop.ex6.scope.Scope;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,16 +36,6 @@ public class LineParser {
 
 
 
-
-    public void statementLineParser(String line, Map<String, Variable> scopeVariables, Map<String, Variable> methods){
-    }
-
-    public void scopeBeginsParser(String line, Map<String, Variable> scopeVariables, Map<String, Variable> methods){
-    }
-
-    public void lineVerification(String line, Map<String, Variable> scopeVariables, Map<String, Variable> methods){
-    }
-
     public static boolean isReturnLine(String line){
         return line.matches(RETURN_LINE_REGEX);
     }
@@ -57,6 +49,7 @@ public class LineParser {
                 return;
             }
             varToChange.changeValue(changeVarMach.group(1));
+            return;
         }
         throw new GeneralException("");
     }
@@ -108,10 +101,10 @@ public class LineParser {
                 declareNewVar(varLine, firstWordInLine, false, scopeVariables);
                 return true;
             }
-            if (firstWordInLine.equals(FINAL)){
+            if (firstWordInLine.equals(FINAL) && wordsInLine.find()){
                 String type = varLine.substring(wordsInLine.start(), wordsInLine.end());
                 if (VariableFactory.checkValidType(type)){
-                    declareNewVar(varLine, firstWordInLine, true, scopeVariables);
+                    declareNewVar(varLine, type, true, scopeVariables);
                     return true;
                 }
             }
@@ -158,7 +151,17 @@ public class LineParser {
 
 
     public static void main(String[] args) {
-
+        Map<String, Variable> scopeVar = new HashMap<>();
+        String varLine = "int a  = 5, b = a;";
+        try{
+            varLineCheck(varLine, scopeVar);
+            for (Variable var : scopeVar.values()){
+                System.out.println(var.getName());
+            }
+            varLineCheck("    b = 777   ;   ", scopeVar);
+        } catch (GeneralException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 }
