@@ -28,6 +28,7 @@ public class MethodFactory {
         if (!matcher.matches()){
             throw new MethodException(ILLEGAL_METHOD_DECLARATION_MSG);
         }
+        // first item in line is void
         if (!matcher.group(1).equals(GENERIC_RETURN_VALUE)){
             throw new MethodException(RETURN_VAL_MSG);
         }

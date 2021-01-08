@@ -2,6 +2,7 @@ package oop.ex6.main;
 
 import oop.ex6.GeneralException;
 import oop.ex6.jacasvariable.Variable;
+import oop.ex6.jacasvariable.VariableException;
 import oop.ex6.jacasvariable.VariableFactory;
 import oop.ex6.method.Method;
 import oop.ex6.method.MethodException;
@@ -29,12 +30,21 @@ public class SJavaParser {
     private final static String ALREADY_EXIST_METHOD_MSG = "method named %s already exist";
 
 
-
+    /**
+     * crates file reader
+     * @param sourceFilePath
+     * @throws FileNotFoundException
+     */
     public SJavaParser(String sourceFilePath) throws FileNotFoundException {
         fileReader = new LineNumberReader(new FileReader(new File(sourceFilePath)));
     }
 
-    public void getGlobalMethodsVariables() throws IOException, GeneralException {
+    /**
+     *
+     * @throws IOException
+     * @throws GeneralException
+     */
+    public void getGlobalMembers() throws IOException, GeneralException {
         line = fileReader.readLine();
         while (line != null){
             if (line.matches(COMMENT_LINE_REGEX) || line.matches(EMPTY_LINE_REGEX)){
@@ -46,11 +56,11 @@ public class SJavaParser {
             }
             if (line.matches(NEW_SCOPE_REGEX)){
                 makeNewMethod();
-            }
+            } // todo: else trow an exception
         }
     }
 
-    private void VarLine(Map<String, Variable> scopeVariables, String varLine) throws MethodException {
+    private void VarLine(Map<String, Variable> scopeVariables, String varLine) throws GeneralException {
         Matcher wordsInLine = Pattern.compile(REGULAR_WORD_SEPARATED).matcher(varLine);
         if (wordsInLine.find()){
             String firstWordInLine = line.substring(wordsInLine.start(), wordsInLine.end());
@@ -76,18 +86,18 @@ public class SJavaParser {
 
     private void makeNewMethod() throws GeneralException, IOException {
         Method newMethod = MethodFactory.createMethod(line);
-        int braceBalance = 1;
+        int bracketsBalance = 1;
         line = fileReader.readLine();
-        while (braceBalance != 0 && line != null){
+        while (bracketsBalance != 0 && line != null){
             newMethod.addLine(line);
             if (line.matches(NEW_SCOPE_REGEX)){
-                braceBalance++;
+                bracketsBalance++;
             } else if (line.matches(END_SCOPE_REGEX)){
-                braceBalance--;
+                bracketsBalance--;
             }
             line = fileReader.readLine();
         }
-        if (braceBalance != 0) {
+        if (bracketsBalance != 0 || !newMethod.isEndWithReturn()) {
             throw new MethodException(SCOPE_NOT_CLOSE_MSG);
         }
         if (programMethods.containsKey(newMethod.getName())){
