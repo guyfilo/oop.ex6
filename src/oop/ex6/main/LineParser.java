@@ -19,6 +19,7 @@ public class LineParser {
     private final static Pattern METHOD_CALL_REGEX =
             Pattern.compile("^\\s*+(\\w++)\\s*+\\(([^\\)]*+)\\)\\s*+;\\s*+$");
     private final static String FINAL = "final";
+
     private final static String END_SCOPE_REGEX = "^[^}]*+}\\s*+$";
     private final static String DECLERATION_LINE = "^.*+;{1}$";
     private final static String NEW_SCOPE_REGEX = "^[^{]*+\\{\\s*+$";
@@ -28,7 +29,18 @@ public class LineParser {
             "\\s++([^;]++)\\s*+;\\s*+$";
     private final static Pattern UNINITIALISED_VAR = Pattern.compile("^\\s*+(\\w++)\\s*+$");
     private final static Pattern INITIALISED_VAR = Pattern.compile("^\\s*+(\\w++)\\s*+=\\s*+(\\S++)\\s*+$");
+    private final static String FIRST_WORD_IS_IF_OR_WHILE_REGEX = "^[^}]*+}\\s*+$";
 
+
+
+    public void statementLineParser(String line, Map<String, Variable> scopeVariables, Map<String, Variable> methods){
+    }
+
+    public void scopeBeginsParser(String line, Map<String, Variable> scopeVariables, Map<String, Variable> methods){
+    }
+
+    public void lineVerification(String line, Map<String, Variable> scopeVariables, Map<String, Variable> methods){
+    }
 
     public static boolean isReturnLine(String line){
         return line.matches(RETURN_LINE_REGEX);
@@ -136,6 +148,11 @@ public class LineParser {
     public static boolean checkLoopLine(String line, Map<String, Variable> scopeVariables ){
         return false; //todo: write check
     }
+
+    public boolean checkIfPrefixIsIfOrWhile(String line){
+        return false;
+    }
+
 
 
     public static void main(String[] args) {

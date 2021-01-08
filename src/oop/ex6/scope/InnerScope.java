@@ -53,4 +53,5 @@ public class InnerScope extends Scope {
         }
         throw new InnerScopeException("Inner scope doesn't ends properly");
     }
+
 }
