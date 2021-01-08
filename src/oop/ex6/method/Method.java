@@ -24,6 +24,11 @@ public class Method {
     private final static Pattern CHAR_RECOGNIZER = Pattern.compile("'{1}\\X{0,1}'$");
     private final static Pattern STRING_RECOGNIZER = Pattern.compile("^\"{1}\\d*\"$");
 
+    // more regexes:
+    private final static Pattern WORD_NO_SPACES_IN_SIDES_PATTERN = Pattern.compile("^\\s*+(\\S++)\\s*+$");
+    private final static String CONTAIN_SPACES = "\\s*+";
+
+
     // variable types:
     private final static String INT_TYPE = "int";
     private final static String DOUBLE_TYPE = "double";
@@ -70,17 +75,23 @@ public class Method {
         // 0 - separate args with comma
         String[] args = argsLine.split(",");
         // 1 - check if the args in the scopeVariables
+        if (args.length != arguments.size()){
+            throw new MethodException("Invalid amount od args");
+        }
         for (int i = 0; i < args.length; i++) {
-            String argAsString = args[i].strip(); //todo: no arg contain more than 1 word, check that i went trough all args - and num = args num
+            String arg = WORD_NO_SPACES_IN_SIDES_PATTERN.matcher(args[i]).group(1);
+            if (arg.matches(CONTAIN_SPACES)) {
+                throw new MethodException("Invalid method arg");
+            }
+            String argAsString = args[i].strip();
             String argValidType = this.arguments.get(i).getType(); // the type the arg should be - the arg is a string
             if (!scopeVariables.containsKey(argAsString)) {
                 checkValidArgAsStringType(argValidType, argAsString);
             } else {
-                Variable arg = scopeVariables.get(argAsString);
-                arg.checkValidValue(argValidType);
+                Variable argAsVariable = scopeVariables.get(argAsString);
+                argAsVariable.checkValidValue(argValidType);
             }
         }
-
         return true;
     }
 
