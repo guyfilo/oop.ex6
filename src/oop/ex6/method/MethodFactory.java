@@ -1,6 +1,7 @@
 package oop.ex6.method;
 
 import oop.ex6.GeneralException;
+import oop.ex6.jacasvariable.Argument;
 import oop.ex6.jacasvariable.Variable;
 import oop.ex6.jacasvariable.VariableFactory;
 
@@ -37,19 +38,19 @@ public class MethodFactory {
         if (!matcher.group(2).matches(METHOD_NAME)){
             throw new MethodException(RETURN_VAL_MSG);
         }
-        ArrayList<Variable> arguments = new ArrayList<>();
+        ArrayList<Argument> arguments = new ArrayList<>();
         String[] args = matcher.group(3).split(",");
         for (String arg: args){
             if (arg.matches(ARG)) {
                 Matcher argMatcher = Pattern.compile(ARG).matcher(arg);
                 argMatcher.matches();
                 arguments.add(
-                        VariableFactory.createNewVar(argMatcher.group(1), argMatcher.group(2), null, false));
+                        VariableFactory.createNewArg(argMatcher.group(1), argMatcher.group(2), false));
             } else if (arg.matches(FINAL_ARG)) {
                 Matcher argMatcher = Pattern.compile(FINAL_ARG).matcher(arg);
                 argMatcher.matches();
                 arguments.add(
-                        VariableFactory.createNewVar(argMatcher.group(1), argMatcher.group(2), null , true));
+                        VariableFactory.createNewArg(argMatcher.group(1), argMatcher.group(2), true));
             } else if (arg.matches(EMPTY_ARG) && args.length == 1) {
             }  else {
                 throw new MethodException(BAD_ARG_MSG);

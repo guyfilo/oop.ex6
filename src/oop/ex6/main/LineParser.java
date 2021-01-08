@@ -2,14 +2,10 @@ package oop.ex6.main;
 
 import oop.ex6.GeneralException;
 import oop.ex6.jacasvariable.Variable;
-import oop.ex6.jacasvariable.VariableException;
 import oop.ex6.jacasvariable.VariableFactory;
-import oop.ex6.method.Method;
-import oop.ex6.method.MethodException;
 import oop.ex6.scope.InnerScope;
 import oop.ex6.scope.Scope;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -41,11 +37,11 @@ public class LineParser {
     }
 
     private static void changeExistVar( String varLine, Variable varToChange,
-                                        Map<String, Variable> scopeVariables) throws GeneralException {
+                                        Scope scope) throws GeneralException {
         Matcher changeVarMach = CHANGE_VARIABLE_REGEX.matcher(varLine);
         if (changeVarMach.matches()){
-            if (scopeVariables.containsKey(changeVarMach.group(1))) {
-                varToChange.changeValue(scopeVariables.get(changeVarMach.group(1)));
+            if (scope.isVariableInScope(changeVarMach.group(1))) {
+                varToChange.changeValue(scope.getScopeVariableByName(changeVarMach.group(1)));
                 return;
             }
             varToChange.changeValue(changeVarMach.group(1));
@@ -56,7 +52,7 @@ public class LineParser {
 
     //todo: change to scope
     private static void declareNewVar
-            (String varLine, String type, boolean isFinal, Map<String, Variable> scopeVariables) throws GeneralException {
+            (String varLine, String type, boolean isFinal, Scope scope) throws GeneralException {
             Matcher varDeclaration = Pattern.compile(type + VAR_DECLARATION_REGEX).matcher(varLine);
             if (!varDeclaration.find()){
                 throw new GeneralException("declaration line must contain declarations");
@@ -67,44 +63,44 @@ public class LineParser {
                 if (varMatcher.matches()){
                     Variable newVar = VariableFactory.createNewVar
                             (varMatcher.group(1), type, null, isFinal);
-                    scopeVariables.put(newVar.getName(), newVar);
+                    scope.addNewVar(newVar);
                     continue;
                 }
                 varMatcher.usePattern(INITIALISED_VAR);
                 if (varMatcher.matches()){
                     Variable newVar;
-                    if (scopeVariables.containsKey(varMatcher.group(2))){
-                        Variable otherVar = scopeVariables.get(varMatcher.group(2));
+                    if (scope.isVariableInScope(varMatcher.group(2))){
+                        Variable otherVar = scope.getScopeVariableByName(varMatcher.group(2));
                         newVar = VariableFactory.createNewVar
                                 (otherVar, varMatcher.group(1), type, isFinal);
                     } else {
                         newVar = VariableFactory.createNewVar
                                 (varMatcher.group(1), type, varMatcher.group(2), isFinal);
                     }
-                    scopeVariables.put(newVar.getName(), newVar);
+                    scope.addNewVar(newVar);
                     continue;
                 }
                 throw new GeneralException("bad declaration");
             }
     }
 
-    public static boolean varLineCheck(String varLine, Map<String, Variable> scopeVariables)
+    public static boolean varLineCheck(String varLine, Scope scope)
             throws GeneralException {
         Matcher wordsInLine = Pattern.compile(REGULAR_WORD_SEPARATED).matcher(varLine);
         if (wordsInLine.find()){
             String firstWordInLine = varLine.substring(wordsInLine.start(), wordsInLine.end());
-            if (scopeVariables.containsKey(firstWordInLine)){
-                changeExistVar(varLine, scopeVariables.get(firstWordInLine), scopeVariables);
+            if (scope.isVariableInScope(firstWordInLine)){
+                changeExistVar(varLine, scope.getScopeVariableByName(firstWordInLine), scope);
                 return true;
             }
             if (VariableFactory.checkValidType(firstWordInLine)){
-                declareNewVar(varLine, firstWordInLine, false, scopeVariables);
+                declareNewVar(varLine, firstWordInLine, false, scope);
                 return true;
             }
             if (firstWordInLine.equals(FINAL) && wordsInLine.find()){
                 String type = varLine.substring(wordsInLine.start(), wordsInLine.end());
                 if (VariableFactory.checkValidType(type)){
-                    declareNewVar(varLine, type, true, scopeVariables);
+                    declareNewVar(varLine, type, true, scope);
                     return true;
                 }
             }
@@ -117,12 +113,11 @@ public class LineParser {
             return;
         }
         Matcher methodCall = METHOD_CALL_REGEX.matcher(declarationLine);
-        if (methodCall.matches() && scope.getGlobalMethods().containsKey(methodCall.group(1)) &&
-                scope.getGlobalMethods().get
-                        (methodCall.group(1)).checkMethodCall(methodCall.group(2), scope.scopeVariables)){
+        if (methodCall.matches() && scope.getMethodByName(methodCall.group(1)).checkMethodCall
+                (methodCall.group(2), scope.getScopeVariables())){
             return;
         }
-        if (varLineCheck(declarationLine, scope.scopeVariables)){
+        if (varLineCheck(declarationLine, scope)){
             return;
         }
         throw new GeneralException("invalid declaration line");
@@ -146,22 +141,6 @@ public class LineParser {
 
     public boolean checkIfPrefixIsIfOrWhile(String line){
         return false;
-    }
-
-
-
-    public static void main(String[] args) {
-        Map<String, Variable> scopeVar = new HashMap<>();
-        String varLine = "int a  = 5, b = a;";
-        try{
-            varLineCheck(varLine, scopeVar);
-            for (Variable var : scopeVar.values()){
-                System.out.println(var.getName());
-            }
-            varLineCheck("    b = 777   ;   ", scopeVar);
-        } catch (GeneralException e) {
-            System.out.println(e.getMessage());
-        }
     }
 
 }

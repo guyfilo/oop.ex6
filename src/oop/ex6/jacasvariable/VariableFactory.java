@@ -19,11 +19,11 @@ public class VariableFactory {
     private final static String STRING_TYPE = "String";
     private final static String CHAR_TYPE = "char";
     // variables types patterns
-    private final static Pattern INT_RECOGNIZER = Pattern.compile("^\\d++$");
-    private final static Pattern DOUBLE_RECOGNIZER = Pattern.compile("^\\d+.{0,1}\\d*+$");
-    private final static Pattern BOOLEAN_RECOGNIZER = Pattern.compile("^\\btrue\\b|\\bfalse\\b|\\d+.{0,1}\\d*$");
-    private final static Pattern CHAR_RECOGNIZER = Pattern.compile("'{1}\\X{0,1}'$");
-    private final static Pattern STRING_RECOGNIZER = Pattern.compile("^\"{1}\\d*\"$");
+    private final static Pattern INT_RECOGNIZER = Pattern.compile("^-?\\d++$");
+    private final static Pattern DOUBLE_RECOGNIZER = Pattern.compile("^-?\\d+.?\\d*+$");
+    private final static Pattern BOOLEAN_RECOGNIZER = Pattern.compile("^\\btrue\\b|\\bfalse\\b|\\d+.?\\d*$");
+    private final static Pattern CHAR_RECOGNIZER = Pattern.compile("^'.?'$");
+    private final static Pattern STRING_RECOGNIZER = Pattern.compile("^\".*?\"$");
 
     // variable valid name pattern
     private final static Pattern NAME_RECOGNIZER = Pattern.compile("^[a-zA-Z]\\w*+|_\\w++$");
@@ -55,31 +55,40 @@ public class VariableFactory {
      * @param isFinal
      * @return
      */
-    public static Variable createNewVar(String name, String type, String value, boolean isFinal) throws VariableException {
+    public static Variable createNewVar(String name, String type, String value, boolean isFinal)
+            throws VariableException {
         if (checkValidName(name) && checkValidValueType(type, value)) {
-            Pattern typeRecognizer = typeRecognizerDict.get(type);
-            return new Variable(name, type, isFinal, typeRecognizer, value != null);
+            return new Variable(name, type, isFinal, typeRecognizerDict.get(type),
+                    value != null);
         } else {
             throw new VariableException("variable declaration is not valid");
         }
     }
 
-    public static Variable createNewVar(Variable otherVar, String name, String type, boolean isFinal) throws VariableException {
-        if (checkValidName(name) && type.equals(otherVar.getType())) {
-            Pattern typeRecognizer = typeRecognizerDict.get(type);
-            return new Variable(name, type, isFinal, typeRecognizer, otherVar.isInitialised());
+    public static Variable createNewVar(Variable otherVar, String name, String type, boolean isFinal)
+            throws VariableException {
+        if (checkValidName(name) && type.equals(otherVar.getType()) && otherVar.isInitialised()) {
+            return new Variable(name, type, isFinal, typeRecognizerDict.get(type)
+                    , otherVar.isInitialised());
         } else {
             throw new VariableException("variable declaration is not valid");
         }
     }
 
+    public static Argument createNewArg(String name, String type, boolean isFinal) throws VariableException {
+        if (checkValidName(name)) {
+            return new Argument(name, type, isFinal, typeRecognizerDict.get(type));
+        } else {
+            throw new VariableException("argument declaration is not valid");
+        }
+    }
 
-    public static boolean checkValidValueType(String varivableType, String varivableValue) {
-        if (varivableValue == null){
+
+    public static boolean checkValidValueType(String variableType, String variableValue) {
+        if (variableValue == null){
             return true;
         }
-        Matcher matcher = typeRecognizerDict.get(varivableType).matcher(varivableValue);
-        return matcher.matches();
+        return variableValue.matches(typeRecognizerDict.get(variableType).toString());
     }
 
     public static boolean checkValidType(String type) throws VariableException {

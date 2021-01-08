@@ -1,6 +1,8 @@
 package oop.ex6.method;
 
+import oop.ex6.jacasvariable.Argument;
 import oop.ex6.jacasvariable.Variable;
+import oop.ex6.jacasvariable.VariableException;
 import oop.ex6.main.LineParser;
 
 import java.util.ArrayList;
@@ -11,43 +13,18 @@ import java.util.regex.Pattern;
 
 public class Method {
     private String name;
-    private ArrayList<Variable> arguments;
+    private ArrayList<Argument> arguments;
     private final ArrayList<String> methodLines = new ArrayList<>();
 
 
     public static HashMap<String, Pattern> typeRecognizerDict;
 
-    // variables types patterns
-    private final static Pattern INT_RECOGNIZER = Pattern.compile("^\\d++$");
-    private final static Pattern DOUBLE_RECOGNIZER = Pattern.compile("^\\d+.{0,1}\\d*+$");
-    private final static Pattern BOOLEAN_RECOGNIZER = Pattern.compile("^\\btrue\\b|\\bfalse\\b|\\d+.{0,1}\\d*$");
-    private final static Pattern CHAR_RECOGNIZER = Pattern.compile("'{1}\\X{0,1}'$");
-    private final static Pattern STRING_RECOGNIZER = Pattern.compile("^\"{1}\\d*\"$");
-
     // more regexes:
     private final static Pattern WORD_NO_SPACES_IN_SIDES_PATTERN = Pattern.compile("^\\s*+(\\S++)\\s*+$");
-    private final static String CONTAIN_SPACES = "\\s*+";
+    private final static String EMPTY_ARG = "^\\s*+$";
 
 
-    // variable types:
-    private final static String INT_TYPE = "int";
-    private final static String DOUBLE_TYPE = "double";
-    private final static String BOOLEAN_TYPE = "boolean";
-    private final static String STRING_TYPE = "String";
-    private final static String CHAR_TYPE = "char";
-
-    static {
-        typeRecognizerDict = new HashMap<>();
-        typeRecognizerDict.put(INT_TYPE, INT_RECOGNIZER);
-        typeRecognizerDict.put(DOUBLE_TYPE, DOUBLE_RECOGNIZER);
-        typeRecognizerDict.put(BOOLEAN_TYPE, BOOLEAN_RECOGNIZER);
-        typeRecognizerDict.put(STRING_TYPE, STRING_RECOGNIZER);
-        typeRecognizerDict.put(CHAR_TYPE, CHAR_RECOGNIZER);
-
-    }
-
-
-    public Method(String name, ArrayList<Variable> arguments){
+    public Method(String name, ArrayList<Argument> arguments){
         this.name = name;
         this.arguments = arguments;
     }
@@ -60,10 +37,6 @@ public class Method {
         return name;
     }
 
-    public ArrayList<Variable> getArguments() {
-        return arguments;
-    }
-
     public boolean isEndWithReturn() throws MethodException {
         if (!LineParser.isReturnLine(methodLines.get(methodLines.size() - 2))){
             throw new MethodException("method does not contain return line");
@@ -71,25 +44,27 @@ public class Method {
         return true;
     }
 
-    public boolean checkMethodCall(String argsLine, Map<String, Variable> scopeVariables) throws MethodException {
+    public boolean checkMethodCall(String argsLine, Map<String, Variable> scopeVariables) //todo: change argsLine to splited arguments array
+            throws MethodException, VariableException {
         // 0 - separate args with comma
         String[] args = argsLine.split(",");
-        // 1 - check if the args in the scopeVariables
+        if (args.length == 1 && args[0].matches(EMPTY_ARG) && arguments.size() == 0){
+            return true;
+        }
         if (args.length != arguments.size()){
-            throw new MethodException("Invalid amount od args");
+            throw new MethodException("Invalid amount of args");
         }
         for (int i = 0; i < args.length; i++) {
-            String arg = WORD_NO_SPACES_IN_SIDES_PATTERN.matcher(args[i]).group(1);
-            if (arg.matches(CONTAIN_SPACES)) {
+            Matcher arg = WORD_NO_SPACES_IN_SIDES_PATTERN.matcher(args[i]);
+            if (!arg.matches()) {
                 throw new MethodException("Invalid method arg");
             }
-            String argAsString = args[i].strip();
-            String argValidType = this.arguments.get(i).getType(); // the type the arg should be - the arg is a string
-            if (!scopeVariables.containsKey(argAsString)) {
-                checkValidArgAsStringType(argValidType, argAsString);
+            String argAsString = arg.group(1);
+            Argument argDemands = this.arguments.get(i); // the type the arg should be - the arg is a string
+            if (scopeVariables.containsKey(argAsString)) {
+                argDemands.checkValidValue(scopeVariables.get(argAsString));
             } else {
-                Variable argAsVariable = scopeVariables.get(argAsString);
-                argAsVariable.checkValidValue(argValidType);
+                argDemands.checkValidValue(argAsString);
             }
         }
         return true;
