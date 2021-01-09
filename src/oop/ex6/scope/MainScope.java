@@ -72,10 +72,7 @@ public class MainScope extends Scope {
         if (bracketsBalance != 0 || !newMethod.isEndWithReturn()) {
             throw new MethodException(SCOPE_NOT_CLOSE_MSG);
         }
-        if (programMethods.containsKey(newMethod.getName())){
-            throw new MethodException(String.format(ALREADY_EXIST_METHOD_MSG, newMethod.getName()));
-        }
-        programMethods.put(newMethod.getName(), newMethod);
+        addNewMethod(newMethod);
     }
 
     @Override

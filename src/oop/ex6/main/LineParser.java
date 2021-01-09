@@ -31,9 +31,6 @@ public class LineParser {
     private final static String LOOP_PREFIX_REGEX = "^\\s*(?:if|while)\\s+\\(([^\\)]++)\\)\\s*+\\{\\s*+$";
     private final static String LOOP_BOOLEAN_CONDITION_REGEX = "^\\s*(?:if|while)\\s+\\(([^\\)]++)\\)\\s*+\\{\\s*+$";
     private final static String NUM = "^\\s*+\\d+\\s*+$";
-    private final static String BOOLEAN_RECOGNIZER_REGEX = "^\\btrue\\b|\\bfalse\\b|\\d+.?\\d*$";
-    private final static String SPLIT_REGEX = "\\|\\||\\&\\&";
-
 
 
 
@@ -145,53 +142,10 @@ public class LineParser {
         return false; //todo: write check
     }
 
-    public static void checkIfPrefixIsIfOrWhile(String line) throws GeneralException {
-        if (!line.matches(LOOP_PREFIX_REGEX)){
-            throw new GeneralException("invalid boolean condition statement");
-        }
+    public static boolean checkIfPrefixIsIfOrWhile(String line){
+        return line.matches(LOOP_PREFIX_REGEX);
     }
 
-
-    public void checkValidBooleanCondition(String line, Scope scope) throws GeneralException {
-        String booleanCondition = getBooleanCondition(line); // the boolean condition
-        String[] conditions = booleanCondition.split(SPLIT_REGEX);
-        for (String condition : conditions) {
-            validCondition(condition, scope);
-            }
-    }
-
-
-    // checks if the condition is int, true, false of suitable variable
-    public static void validCondition(String condition, Scope scope) throws GeneralException {
-        condition = condition.strip();
-        condition.matches(BOOLEAN_RECOGNIZER_REGEX);
-        isSubBooleanInitializedBoleanVar(condition, scope);
-    }
-
-
-
-    public static String getBooleanCondition(String line){
-        Pattern loopFirstLinePattern = Pattern.compile(LOOP_PREFIX_REGEX);
-        Matcher loopFirstLine = loopFirstLinePattern.matcher(line);
-        String booleanCondition = loopFirstLine.group(1); // gets the boolean condition
-        return booleanCondition;
-    }
-
-
-    public static void isSubBooleanInitializedBoleanVar(String condition, Scope scope) throws GeneralException {
-        if (scope.isVariableInScope(condition)){
-            Variable variableCondition = scope.getScopeVariableByName(condition);
-            if (!(variableCondition.isInitialised() && variableCondition.getType().matches(BOOLEAN_RECOGNIZER_REGEX))){
-                throw new GeneralException("invalid boolean condition statement");
-            }
-        }
-        throw new GeneralException("invalid boolean condition statement");
-    }
-
-    public void checkLoopTitel(String line, Scope scope) throws GeneralException {
-        checkIfPrefixIsIfOrWhile(line);
-        checkValidBooleanCondition(line, scope);
-    }
 
 
 
