@@ -68,7 +68,7 @@ public class LineParser {
                 Matcher varMatcher = UNINITIALISED_VAR.matcher(declaration);
                 if (varMatcher.matches()){
                     Variable newVar = VariableFactory.createNewVar
-                            (varMatcher.group(1), type, null, isFinal);
+                            (varMatcher.group(1), type, null, isFinal, scope);
                     scope.addNewVar(newVar);
                     continue;
                 }
@@ -78,10 +78,10 @@ public class LineParser {
                     if (scope.isVariableInScope(varMatcher.group(2))){
                         Variable otherVar = scope.getScopeVariableByName(varMatcher.group(2));
                         newVar = VariableFactory.createNewVar
-                                (otherVar, varMatcher.group(1), type, isFinal);
+                                (otherVar, varMatcher.group(1), type, isFinal, scope);
                     } else {
                         newVar = VariableFactory.createNewVar
-                                (varMatcher.group(1), type, varMatcher.group(2), isFinal);
+                                (varMatcher.group(1), type, varMatcher.group(2), isFinal, scope);
                     }
                     scope.addNewVar(newVar);
                     continue;
