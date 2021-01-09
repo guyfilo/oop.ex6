@@ -6,8 +6,6 @@ package oop.ex6.jacasvariable;//import oop.ex6.jacasvariable.Variable;
 import oop.ex6.scope.Scope;
 
 import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 //_______________________________________CLASS______________________________________________________________//
 
@@ -25,13 +23,14 @@ public class VariableFactory {
     private final static String CHAR_TYPE = "char";
 
     // variables types patterns
-    private final static Pattern INT_RECOGNIZER = Pattern.compile("^-?\\d++$");
-    private final static Pattern DOUBLE_RECOGNIZER = Pattern.compile("^-?\\d+.?\\d*+$");
-    private final static Pattern BOOLEAN_RECOGNIZER = Pattern.compile
-            ("^\\btrue\\b|\\bfalse\\b|-?\\d+.?\\d*$");
-    private final static Pattern CHAR_RECOGNIZER = Pattern.compile("^'.?'$");
-    private final static Pattern STRING_RECOGNIZER = Pattern.compile("^\".*?\"$");
-    private final static Pattern NAME_RECOGNIZER = Pattern.compile("^[a-zA-Z]\\w*+|_\\w++$");
+    private final static String INT_RECOGNIZER = "^-?\\d++$";
+    private final static String DOUBLE_RECOGNIZER = "^-?\\d+.?\\d*+$";
+    private final static String BOOLEAN_RECOGNIZER = "^\\btrue\\b|\\bfalse\\b|-?\\d+.?\\d*$";
+    private final static String CHAR_RECOGNIZER = "^'.?'$";
+    private final static String STRING_RECOGNIZER = "^\".*?\"$";
+
+    // variable valid name pattern
+    private final static String NAME_RECOGNIZER = "^[a-zA-Z]\\w*+|_\\w++$";
     //todo:add save word check
 
     // error messages:
@@ -39,10 +38,11 @@ public class VariableFactory {
     private final static String INVALID_ARGUMENTS_DECLARATION = "argument declaration is not valid";
 
     // type recognizer dict
+    private static final HashMap<String, String> typeRecognizerDict;
+
     /**
      * a Map that its key is a variable type and its value is a pattern that recognize the type
      */
-    public static HashMap<String, Pattern> typeRecognizerDict;
     static {
         typeRecognizerDict = new HashMap<>();
         typeRecognizerDict.put(INT_TYPE, INT_RECOGNIZER);
@@ -50,11 +50,18 @@ public class VariableFactory {
         typeRecognizerDict.put(BOOLEAN_TYPE, BOOLEAN_RECOGNIZER);
         typeRecognizerDict.put(STRING_TYPE, STRING_RECOGNIZER);
         typeRecognizerDict.put(CHAR_TYPE, CHAR_RECOGNIZER);
-
     }
 
-    //*********************************** DECELERATIONS ****************************************************//
-    Variable otherVar;
+    protected static final HashMap<String, String> VALID_TYPES_INITIALIZE;
+
+    static {
+        VALID_TYPES_INITIALIZE = new HashMap<>();
+        VALID_TYPES_INITIALIZE.put(INT_TYPE, INT_TYPE);
+        VALID_TYPES_INITIALIZE.put(DOUBLE_TYPE, INT_TYPE + "|" + DOUBLE_TYPE);
+        VALID_TYPES_INITIALIZE.put(BOOLEAN_TYPE, INT_TYPE + "|" + DOUBLE_TYPE + "|" + BOOLEAN_TYPE);
+        VALID_TYPES_INITIALIZE.put(STRING_TYPE, STRING_TYPE);
+        VALID_TYPES_INITIALIZE.put(CHAR_TYPE, CHAR_TYPE);
+    }
     //************************************ FUNCTIONS *******************************************************//
 
     /**
@@ -69,29 +76,26 @@ public class VariableFactory {
     public static Variable createNewVar(String name, String type, String value, boolean isFinal,
                                         Scope varScope)
             throws VariableException {
-        if (checkValidName(name) && checkValidValueType(type, value, isFinal)) {
-            return new Variable(name, type, isFinal, typeRecognizerDict.get(type),
-                    value != null, varScope);
-        } else {
-            throw new VariableException(INVALID_VARIABLE_DECLARATION);
-        }
+        checkValidName(name);
+        checkValidValueType(type, value, isFinal);
+        return new Variable(name, type, isFinal, typeRecognizerDict.get(type),
+                value != null, varScope);
     }
 //todo: desc
 
-    public static Variable createNewVar(Variable otherVar, String name, String type, boolean isFinal,
-                                        Scope varScope)
+    public static Variable createNewVar
+            (Variable otherVar, String name, String type, boolean isFinal, Scope varScope)
             throws VariableException {
-        if (checkValidName(name) && type.equals(otherVar.getType()) && otherVar.isInitialised()) {
-            return new Variable(name, type, isFinal, typeRecognizerDict.get(type)
-                    , otherVar.isInitialised(), varScope);
-        } else {
-            throw new VariableException(INVALID_VARIABLE_DECLARATION);
-        }
+        checkValidName(name);
+        checkValidOtherVar(type, otherVar);
+        return new Variable(name, type, isFinal, typeRecognizerDict.get(type)
+                , otherVar.isInitialised(), varScope);
     }
 
 //todo: desc
     public static Argument createNewArg(String name, String type, boolean isFinal) throws VariableException {
-        if (checkValidName(name) && checkValidType(type)) {
+        if (checkValidType(type)) {
+            checkValidName(name);
             return new Argument(name, type, isFinal, typeRecognizerDict.get(type));
         } else {
             throw new VariableException(INVALID_ARGUMENTS_DECLARATION);
@@ -105,11 +109,14 @@ public class VariableFactory {
      * @param isFinal - true if the variable is final, false - otherwise
      * @return if the value is from the given type, false otherwise
      */
-    public static boolean checkValidValueType(String variableType, String variableValue, boolean isFinal) {
-        if (variableValue == null){
-            return !isFinal;
+    private static void checkValidValueType(String variableType, String variableValue, boolean isFinal)
+            throws VariableException {
+        if (variableValue == null && isFinal){
+            throw new VariableException("try to declare uninitialise final variable");
         }
-        return variableValue.matches(typeRecognizerDict.get(variableType).toString());
+        if (variableValue != null && !variableValue.matches(typeRecognizerDict.get(variableType))){
+            throw new VariableException("try to declare variable with invalid type value");
+        }
     }
 
     /**
@@ -122,14 +129,29 @@ public class VariableFactory {
         return typeRecognizerDict.containsKey(type);
     }
 
+
     /**
      * this method checks if a variable name is valid
      * @param variableName - a variable name
      * @return true - if the variable name is valid, false - otherwise
      */
-    private static boolean checkValidName(String variableName) {
-        Matcher matcher = NAME_RECOGNIZER.matcher(variableName);
-        return matcher.matches();
+    private static void checkValidName(String variableName) throws VariableException {
+        if (!variableName.matches(NAME_RECOGNIZER)) {
+            throw new VariableException("invalid variable name: " + variableName);
+        }
     }
+
+    public static void checkValidOtherVar(String type ,Variable otherVar) throws VariableException {
+        if (!otherVar.isInitialised()){
+            throw new VariableException("try to initialise with uninitialised variable");
+        }
+        if (!VALID_TYPES_INITIALIZE.containsKey(type)){
+            throw new VariableException("invalid type");
+        }
+        if (!otherVar.getType().matches(VALID_TYPES_INITIALIZE.get(type))){
+            throw new VariableException("try to initialise with wrong type variable");
+        }
+    }
+
 
 }

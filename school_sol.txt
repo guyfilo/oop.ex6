@@ -38,7 +38,6 @@ extraTest_037.sjava - 1
 extraTest_038.sjava - 1
 extraTest_039.sjava - 0
 extraTest_040.sjava - 1
-test000.sjava - 0
 test001.sjava - 0
 test002.sjava - 0
 test003.sjava - 0

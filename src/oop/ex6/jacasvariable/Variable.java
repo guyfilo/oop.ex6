@@ -4,8 +4,7 @@ package oop.ex6.jacasvariable;
 //______________________________________IMPORTS_____________________________________________________________//
 import oop.ex6.scope.Scope;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.HashMap;
 
 //_______________________________________CLASS______________________________________________________________//
 /**
@@ -15,12 +14,27 @@ public class Variable {
 
 //*********************************** MAGIC NUMBERS ********************************************************//
 
+    private final static String INT_TYPE = "int";
+    private final static String DOUBLE_TYPE = "double";
+    private final static String BOOLEAN_TYPE = "boolean";
+    private final static String STRING_TYPE = "String";
+    private final static String CHAR_TYPE = "char";
+    protected static final HashMap<String, String> VALID_TYPES_INITILISE;
+
+    static {
+        VALID_TYPES_INITILISE = new HashMap<>();
+        VALID_TYPES_INITILISE.put(INT_TYPE, INT_TYPE);
+        VALID_TYPES_INITILISE.put(DOUBLE_TYPE, INT_TYPE + DOUBLE_TYPE);
+        VALID_TYPES_INITILISE.put(BOOLEAN_TYPE, INT_TYPE + DOUBLE_TYPE + BOOLEAN_TYPE);
+        VALID_TYPES_INITILISE.put(STRING_TYPE, STRING_TYPE);
+        VALID_TYPES_INITILISE.put(CHAR_TYPE, CHAR_TYPE);
+    }
 //*********************************** DECELERATIONS ********************************************************//
     private final boolean isFinal;
     private final String type;
     private final String name;
     private boolean initialised;
-    private final Pattern typeRecognizer;
+    private final String typeRecognizer;
     private final Scope varScope;
 
 //************************************* FUNCTIONS **********************************************************//
@@ -34,7 +48,8 @@ public class Variable {
      * @param initialised - true - if the variable is initialized, false - otherwise
      * @param varScope - the scope the variable belongs to
      */
-    public Variable(String name, String type, boolean isFinal, Pattern typeRecognizer, boolean initialised, Scope varScope) {
+    public Variable(String name, String type, boolean isFinal, String typeRecognizer,
+                    boolean initialised, Scope varScope) {
         this.type = type;
         this.name = name;
         this.isFinal = isFinal;
@@ -98,7 +113,7 @@ public class Variable {
      * this method return the Pattern with a regex that suits the variable type
      * @return the Pattern with a regex that suits the variable type
      */
-    public Pattern getTypeRecognizer() {
+    public String getTypeRecognizer() {
         return typeRecognizer;
     }
 
@@ -120,8 +135,7 @@ public class Variable {
         if (this.isFinal){
             throw new VariableException("trying to change final var");
         }
-        Matcher matcher = this.typeRecognizer.matcher(newValue);
-        if (!matcher.matches()) {
+        if (!newValue.matches(typeRecognizer)) {
             throw new VariableException("invalid type");
         }
         this.initialised = true;
@@ -137,13 +151,7 @@ public class Variable {
         if (this.isFinal){
             throw new VariableException("trying to change final var");
         }
-        Matcher matcher = this.typeRecognizer.matcher(otherVar.type);
-        if (!matcher.matches()) {
-            throw new VariableException("invalid type");
-        }
-        if (!otherVar.isInitialised()){
-            throw new VariableException("try to initialise with unInitialised variable");
-        }
+        VariableFactory.checkValidOtherVar(type, otherVar);
         this.initialised = true;
     }
 

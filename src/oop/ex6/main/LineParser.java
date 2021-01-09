@@ -1,4 +1,3 @@
-//______________________________________PACKAGE_____________________________________________________________//
 package oop.ex6.main;
 
 //______________________________________IMPORTS_____________________________________________________________//
@@ -8,6 +7,7 @@ import oop.ex6.jacasvariable.VariableFactory;
 import oop.ex6.scope.InnerScope;
 import oop.ex6.scope.Scope;
 import oop.ex6.scope.ScopeException;
+
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,28 +28,28 @@ public class LineParser {
     // regexes:
     private final static String RETURN_LINE_REGEX = "^\\s*+return\\s*+;\\s*+$";
     private final static String REGULAR_WORD_SEPARATED = "\\b\\w++\\b";
-    private final static String END_SCOPE_REGEX = "^[^}]*+}\\s*+$";
-    private final static String DECLERATION_LINE = "^[^;]*+;\\s*+$";
+    private final static String END_SCOPE_REGEX = "^\\s*+}\\s*+$";
+    private final static String DECLERATION_LINE = "^.*;\\s*+$";
     private final static String NEW_SCOPE_REGEX = "^[^{]*+\\{\\s*+$";
     private final static String FIRST_WORD_IS_IF_OR_WHILE_REGEX = "^[^}]*+}\\s*+$";
     private final static String LOOP_PREFIX_REGEX = "^\\s*(?:if|while)\\s*+\\(([^\\)]++)\\)\\s*+\\{\\s*+$";
     private final static String LOOP_BOOLEAN_CONDITION_REGEX =
             "^\\s*(?:if|while)\\s+\\(([^\\)]++)\\)\\s*+\\{\\s*+$";
     private final static String NUM = "^\\s*+\\d+\\s*+$";
-    private final static String BOOLEAN_RECOGNIZER_REGEX = "^\\btrue\\b|\\bfalse\\b|-?\\d+.?\\d*$";
+    private final static String BOOLEAN_RECOGNIZER_REGEX = "^\\btrue\\b|\\bfalse\\b|-?\\d+\\.?\\d*$";
     private final static String TYPE_SERVES_AS_BOOLEAN_REGEX =
-            "^\\bint\\b|\\bdouble\\b|\\bboolean\\b|-?\\d+.?\\d*$";
+            "^\\bint\\b|\\bdouble\\b|\\bboolean\\b|-?\\d+\\.?\\d*$";
     private final static String EMPTY_LINE_REGEX = "^\\s*+$";
     private final static String COMMENT_LINE_REGEX = "^\\/\\/.*+$";
     private final static String SPLIT_REGEX = "\\|\\||\\&\\&";
     private final static String VAR_DECLARATION_REGEX =
-            "\\s++([^;]++)\\s*+;\\s*+$";
+            "\\s++(.+)\\s*+;\\s*+$";
 
     // patterns:
     private final static Pattern METHOD_CALL_REGEX =
-            Pattern.compile("^\\s*+(\\w++)\\s*+\\(([^\\)]*+)\\)\\s*+;\\s*+$");
+            Pattern.compile("^\\s*+(\\w++)\\s*+\\((.*)\\)\\s*+;\\s*+$");
     private final static Pattern CHANGE_VARIABLE_REGEX =
-            Pattern.compile("^\\s*+\\w++\\s*+=\\s*+([^;\\s]*+)\\s*+;\\s*+$");
+            Pattern.compile("^\\s*+\\w++\\s*+=\\s*+(.+?)\\s*+;\\s*+$");
     private final static Pattern UNINITIALISED_VAR = Pattern.compile("^\\s*+(\\w++)\\s*+$");
     private final static Pattern INITIALISED_VAR = Pattern.compile("^\\s*+(\\w++)\\s*+=\\s*+(\\S++)\\s*+$");
 

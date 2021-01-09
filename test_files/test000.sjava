@@ -1,0 +1,5 @@
+String a;
+void foo(final String b){
+a = "a a";
+return;
+}
