@@ -161,7 +161,7 @@ test246.sjava - 1
 test247.sjava - 1
 test248.sjava - 1
 test249.sjava - 1
-test250.sjava - 0
+test250.sjava - 1
 test251.sjava - 0
 test252.sjava - 1
 test253.sjava - 0
