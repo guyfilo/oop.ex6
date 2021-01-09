@@ -46,10 +46,14 @@ public class MainScope extends Scope {
             }
             if (line.matches(VAR_DECLARATION_REGEX)){
                 LineParser.varLineCheck(line, this);
+                line = fileReader.readLine();
+                continue;
             }
             if (line.matches(NEW_SCOPE_REGEX)){
                 makeNewMethod();
-            } // todo: else trow an exception
+                continue;
+            }
+            throw new ScopeException(String.format("line %d is an invalid global scope line", fileReader.getLineNumber()));
         }
     }
 

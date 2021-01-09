@@ -45,25 +45,17 @@ public class MethodFactory {
                 Matcher argMatcher = Pattern.compile(ARG).matcher(arg);
                 argMatcher.matches();
                 arguments.add(
-                        VariableFactory.createNewArg(argMatcher.group(1), argMatcher.group(2), false));
+                        VariableFactory.createNewArg(argMatcher.group(2), argMatcher.group(1), false));
             } else if (arg.matches(FINAL_ARG)) {
                 Matcher argMatcher = Pattern.compile(FINAL_ARG).matcher(arg);
                 argMatcher.matches();
                 arguments.add(
-                        VariableFactory.createNewArg(argMatcher.group(1), argMatcher.group(2), true));
+                        VariableFactory.createNewArg(argMatcher.group(2), argMatcher.group(1), true));
             } else if (arg.matches(EMPTY_ARG) && args.length == 1) {
             }  else {
                 throw new MethodException(BAD_ARG_MSG);
             }
         }
         return new Method(matcher.group(2), arguments);
-    }
-
-    public static void main(String[] args) {
-        String str = "  ; ";
-        Matcher matcher1 = Pattern.compile("\\b\\w++\\b").matcher(str);
-        while (matcher1.find()){
-            System.out.println(str.substring(matcher1.start(), matcher1.end()));
-        }
     }
 }

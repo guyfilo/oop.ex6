@@ -18,7 +18,7 @@ public class LineParser {
     private final static String FINAL = "final";
 
     private final static String END_SCOPE_REGEX = "^[^}]*+}\\s*+$";
-    private final static String DECLERATION_LINE = "^.*+;{1}$";
+    private final static String DECLERATION_LINE = "^[^;]*+;\\s*+$";
     private final static String NEW_SCOPE_REGEX = "^[^{]*+\\{\\s*+$";
     private final static Pattern CHANGE_VARIABLE_REGEX =
             Pattern.compile("^\\s*+\\w++\\s*+=\\s*+([^;\\s]*+)\\s*+;\\s*+$");

@@ -77,7 +77,7 @@ public class VariableFactory {
     }
 
     public static Argument createNewArg(String name, String type, boolean isFinal) throws VariableException {
-        if (checkValidName(name)) {
+        if (checkValidName(name) && checkValidType(type)) {
             return new Argument(name, type, isFinal, typeRecognizerDict.get(type));
         } else {
             throw new VariableException("argument declaration is not valid");

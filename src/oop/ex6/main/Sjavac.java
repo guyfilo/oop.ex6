@@ -11,18 +11,22 @@ public class Sjavac {
 
 
 
-    public static void main(String[] args) {
+    public static String main1(String[] args) {
         try{
             checkValidFile(args);
             MainScope mainScope = new MainScope(args[0]);
             mainScope.getGlobalMembers();
             mainScope.checkMethodsScopes();
+            System.out.println(0);
+            return "0";
         } catch (IOException error) {
             System.out.println(INVALID_INPUT_OUTPUT_NUMERIC_VALUE);
-            System.err.println(error.getMessage());
+            System.out.println(error.getMessage());
+            return "2";
         } catch (GeneralException error) {
             System.out.println(INVALID_SJAVA_FILE_NUMERIC_VALUE);
-            System.err.println(error.getMessage());
+            System.out.println(error.getMessage());
+            return "1";
         }
     }
 
@@ -37,6 +41,10 @@ public class Sjavac {
         }
 
 
+    }
+
+    public static void main(String[] args) {
+        main1(args);
     }
 
 
