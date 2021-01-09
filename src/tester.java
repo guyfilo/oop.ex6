@@ -9,6 +9,7 @@ import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Scanner;
 import java.util.stream.Stream;
 
@@ -25,7 +26,7 @@ public class tester {
         String compare = new String(Files.readAllBytes(Paths.get(school_sol.getAbsolutePath())), "UTF-8");
 
         File[] test_files = tests_dir.listFiles();
-        Stream<File> test_files1 = Arrays.stream(test_files).sorted((x, y) -> x.getName().compareTo(y.getName()));
+        Arrays.sort(test_files, Comparator.comparing(File::getName));
 
         PrintStream stdout = System.out;
         ByteArrayOutputStream bytes_out = new ByteArrayOutputStream();
