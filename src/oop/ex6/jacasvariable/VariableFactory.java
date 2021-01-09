@@ -58,7 +58,7 @@ public class VariableFactory {
      */
     public static Variable createNewVar(String name, String type, String value, boolean isFinal, Scope varScope)
             throws VariableException {
-        if (checkValidName(name) && checkValidValueType(type, value)) {
+        if (checkValidName(name) && checkValidValueType(type, value, isFinal)) {
             return new Variable(name, type, isFinal, typeRecognizerDict.get(type),
                     value != null, varScope);
         } else {
@@ -85,9 +85,9 @@ public class VariableFactory {
     }
 
 
-    public static boolean checkValidValueType(String variableType, String variableValue) {
+    public static boolean checkValidValueType(String variableType, String variableValue, boolean isFinal) {
         if (variableValue == null){
-            return true;
+            return !isFinal;
         }
         return variableValue.matches(typeRecognizerDict.get(variableType).toString());
     }

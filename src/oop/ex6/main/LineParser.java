@@ -112,12 +112,6 @@ public class LineParser {
             if (firstWordInLine.equals(FINAL) && wordsInLine.find()){
                 String type = varLine.substring(wordsInLine.start(), wordsInLine.end());
                 if (VariableFactory.checkValidType(type)){
-
-                    //todo: changes starts here
-                    if (!varLine.contains("=")){
-                        throw new GeneralException("un initialized variable cant be final");
-                    }
-                    //todo: changes ends here + needs to check if it initialized
                     declareNewVar(varLine, type, true, scope);
                     return true;
                 }
