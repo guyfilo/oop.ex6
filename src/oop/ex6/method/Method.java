@@ -77,4 +77,12 @@ public class Method {
             throw new MethodException("Method arg has invalid type");
         }
     }
+
+    public ArrayList<String> getMethodLines() {
+        return methodLines;
+    }
+
+    public ArrayList<Argument> getArguments() {
+        return arguments;
+    }
 }

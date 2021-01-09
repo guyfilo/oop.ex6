@@ -1,6 +1,7 @@
 package oop.ex6.scope;
 
 import oop.ex6.GeneralException;
+import oop.ex6.jacasvariable.Argument;
 import oop.ex6.jacasvariable.Variable;
 import oop.ex6.main.LineParser;
 import oop.ex6.method.Method;
@@ -20,11 +21,7 @@ public class MainScope extends Scope {
     private final static String NEW_SCOPE_REGEX = "^[^{]*+\\{\\s*+$";
     private final static String END_SCOPE_REGEX = "^[^}]*+}\\s*+$";
     private final static String EMPTY_LINE_REGEX = "^\\s*+$";
-    private final static String REGULAR_WORD_SEPARATED = "\\b\\w++\\b";
-
     private final static String SCOPE_NOT_CLOSE_MSG = "} expected";
-    private final static String ALREADY_EXIST_METHOD_MSG = "method named %s already exist";
-
 
     /**
      * crates file reader
@@ -83,6 +80,30 @@ public class MainScope extends Scope {
     @Override
     public Variable getScopeVariableByName(String variableName) {
         return getScopeVariables().get(variableName);
+    }
+
+    private Map<String, Variable> getGlobalVariables() {
+        Map<String, Variable> globalVariables = new HashMap<>();
+        for (Variable globalVariable: getScopeVariables().values()){
+            globalVariables.put(globalVariable.getName(), new Variable(globalVariable));
+        }
+        return globalVariables;
+    }
+
+    private InnerScope getMethodScope(Method method) throws ScopeException {
+        InnerScope methodScope =
+                new InnerScope(method.getMethodLines(), getScopeMethods(), getGlobalVariables());
+        for (Argument arg: method.getArguments()){
+            methodScope.addNewVar(new Variable(arg, methodScope));
+        }
+        return methodScope;
+    }
+
+    public void checkMethodsScopes() throws GeneralException {
+        for (Method method: getScopeMethods().values()){
+            InnerScope methodScope = getMethodScope(method);
+            methodScope.checkValidScope();
+        }
     }
 
 }

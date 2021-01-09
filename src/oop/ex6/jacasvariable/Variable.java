@@ -4,6 +4,7 @@ package oop.ex6.jacasvariable;
 //______________________________________IMPORTS_____________________________________________________________//
 import oop.ex6.scope.Scope;
 
+import javax.print.attribute.standard.MediaSize;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,6 +42,25 @@ public class Variable {
         this.typeRecognizer = typeRecognizer;
         this.initialised = initialised;
         this.varScope = varScope;
+    }
+
+
+    public Variable(Variable otherVariable){
+        this.type = otherVariable.type;
+        this.name = otherVariable.name;
+        this.isFinal = otherVariable.isFinal;
+        this.typeRecognizer = otherVariable.typeRecognizer;
+        this.initialised = otherVariable.isInitialised();
+        this.varScope = otherVariable.varScope;
+    }
+
+    public Variable(Argument argument, Scope scope){
+        this.type = argument.getType();
+        this.name = argument.getName();
+        this.isFinal = argument.isFinal();
+        this.typeRecognizer = argument.getTypeRecognizer();
+        this.initialised = true;
+        this.varScope = scope;
     }
 
     /**

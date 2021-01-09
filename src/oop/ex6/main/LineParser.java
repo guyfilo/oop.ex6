@@ -152,7 +152,7 @@ public class LineParser {
     }
 
 
-    public void checkValidBooleanCondition(String line, Scope scope) throws GeneralException {
+    public static void checkValidBooleanCondition(String line, Scope scope) throws GeneralException {
         String booleanCondition = getBooleanCondition(line); // the boolean condition
         String[] conditions = booleanCondition.split(SPLIT_REGEX);
         for (String condition : conditions) {
@@ -188,7 +188,7 @@ public class LineParser {
         throw new GeneralException("invalid boolean condition statement");
     }
 
-    public void checkLoopTitel(String line, Scope scope) throws GeneralException {
+    public static void checkLoopTitle(String line, Scope scope) throws GeneralException {
         checkIfPrefixIsIfOrWhile(line);
         checkValidBooleanCondition(line, scope);
     }
