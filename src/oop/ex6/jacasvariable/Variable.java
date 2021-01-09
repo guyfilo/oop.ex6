@@ -1,8 +1,7 @@
-package oop.ex6.jacasvariable;//______________________________________PACKAGE_____________________________________________________________//
-
+//______________________________________PACKAGE_____________________________________________________________//
+package oop.ex6.jacasvariable;
 
 //______________________________________IMPORTS_____________________________________________________________//
-
 import oop.ex6.method.MethodException;
 
 import java.util.HashMap;
@@ -10,7 +9,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 //_______________________________________CLASS______________________________________________________________//
-
 /**
  * this class creates a variable object
  */
@@ -18,20 +16,23 @@ public class Variable {
 
 //*********************************** MAGIC NUMBERS ********************************************************//
 
-
-    //*********************************** DECELERATIONS ********************************************************//
+//*********************************** DECELERATIONS ********************************************************//
     private final boolean isFinal;
     private final String type;
     private final String name;
     private boolean initialised;
     private final Pattern typeRecognizer;
 
-
-
-
 //************************************* FUNCTIONS **********************************************************//
 
-
+    /**
+     * this class is the variable contracture
+     * @param name - the variable name
+     * @param type - the variable type
+     * @param isFinal
+     * @param typeRecognizer
+     * @param initialised
+     */
     public Variable(String name, String type, boolean isFinal, Pattern typeRecognizer, boolean initialised) {
         this.type = type;
         this.name = name;

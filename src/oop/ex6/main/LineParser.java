@@ -29,6 +29,9 @@ public class LineParser {
     private final static Pattern INITIALISED_VAR = Pattern.compile("^\\s*+(\\w++)\\s*+=\\s*+(\\S++)\\s*+$");
     private final static String FIRST_WORD_IS_IF_OR_WHILE_REGEX = "^[^}]*+}\\s*+$";
     private final static String LOOP_PREFIX_REGEX = "^\\s*(?:if|while)\\s+\\(([^\\)]++)\\)\\s*+\\{\\s*+$";
+    private final static String LOOP_BOOLEAN_CONDITION_REGEX = "^\\s*(?:if|while)\\s+\\(([^\\)]++)\\)\\s*+\\{\\s*+$";
+    private final static String NUM = "^\\s*+\\d+\\s*+$";
+
 
 
 
@@ -135,12 +138,17 @@ public class LineParser {
         return line.matches(NEW_SCOPE_REGEX);
     }
 
-    public static boolean checkLoopLine(String line, Map<String, Variable> scopeVariables ){
+    public boolean checkLoopLine(String line, Map<String, Variable> scopeVariables ){
         return false; //todo: write check
     }
 
-    public boolean checkIfPrefixIsIfOrWhile(String line){
-        return false;
+    public static boolean checkIfPrefixIsIfOrWhile(String line){
+        return line.matches(LOOP_PREFIX_REGEX);
     }
+
+
+
+
+
 
 }
