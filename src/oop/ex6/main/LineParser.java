@@ -31,6 +31,10 @@ public class LineParser {
     private final static String LOOP_BOOLEAN_CONDITION_REGEX = "^\\s*(?:if|while)\\s+\\(([^\\)]++)\\)\\s*+\\{\\s*+$";
     private final static String NUM = "^\\s*+\\d+\\s*+$";
     private final static String BOOLEAN_RECOGNIZER_REGEX = "^\\btrue\\b|\\bfalse\\b|-?\\d+.?\\d*$";
+    private final static String TYPE_SERVES_AS_BOOLEAN_REGEX = "^\\bint\\b|\\bdouble\\b|\\bboolean\\b|-?\\d+.?\\d*$";
+
+
+
     private final static String SPLIT_REGEX = "\\|\\||\\&\\&";
 
 
@@ -105,6 +109,12 @@ public class LineParser {
             if (firstWordInLine.equals(FINAL) && wordsInLine.find()){
                 String type = varLine.substring(wordsInLine.start(), wordsInLine.end());
                 if (VariableFactory.checkValidType(type)){
+
+                    //todo: changes starts here
+                    if (!varLine.contains("=")){
+                        throw new GeneralException("un initialized variable cant be final");
+                    }
+                    //todo: changes ends here + needs to check if it initialized
                     declareNewVar(varLine, type, true, scope);
                     return true;
                 }
@@ -181,7 +191,7 @@ public class LineParser {
     public static void isSubBooleanInitializedBoleanVar(String condition, Scope scope) throws GeneralException {
         if (scope.isVariableInScope(condition)) {
             Variable variableCondition = scope.getScopeVariableByName(condition);
-            if (variableCondition.isInitialised() && variableCondition.getType().matches(BOOLEAN_RECOGNIZER_REGEX)) {
+            if (variableCondition.isInitialised() && variableCondition.getType().matches(TYPE_SERVES_AS_BOOLEAN_REGEX)) {
                 return;
             }
         } else if (condition.matches(BOOLEAN_RECOGNIZER_REGEX)){
