@@ -6,7 +6,6 @@ import oop.ex6.jacasvariable.VariableFactory;
 import oop.ex6.scope.InnerScope;
 import oop.ex6.scope.Scope;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,7 +30,7 @@ public class LineParser {
     private final static String LOOP_PREFIX_REGEX = "^\\s*(?:if|while)\\s+\\(([^\\)]++)\\)\\s*+\\{\\s*+$";
     private final static String LOOP_BOOLEAN_CONDITION_REGEX = "^\\s*(?:if|while)\\s+\\(([^\\)]++)\\)\\s*+\\{\\s*+$";
     private final static String NUM = "^\\s*+\\d+\\s*+$";
-    private final static String BOOLEAN_RECOGNIZER_REGEX = "^\\btrue\\b|\\bfalse\\b|\\d+.?\\d*$";
+    private final static String BOOLEAN_RECOGNIZER_REGEX = "^\\btrue\\b|\\bfalse\\b|-?\\d+.?\\d*$";
     private final static String SPLIT_REGEX = "\\|\\||\\&\\&";
 
 
@@ -164,7 +163,7 @@ public class LineParser {
     // checks if the condition is int, true, false of suitable variable
     public static void validCondition(String condition, Scope scope) throws GeneralException {
         condition = condition.strip();
-        condition.matches(BOOLEAN_RECOGNIZER_REGEX);
+//        condition.matches(BOOLEAN_RECOGNIZER_REGEX);
         isSubBooleanInitializedBoleanVar(condition, scope);
     }
 
@@ -173,19 +172,23 @@ public class LineParser {
     public static String getBooleanCondition(String line){
         Pattern loopFirstLinePattern = Pattern.compile(LOOP_PREFIX_REGEX);
         Matcher loopFirstLine = loopFirstLinePattern.matcher(line);
-        String booleanCondition = loopFirstLine.group(1); // gets the boolean condition
+        loopFirstLine.find();
+        String booleanCondition = loopFirstLine.group(1);
         return booleanCondition;
     }
 
 
     public static void isSubBooleanInitializedBoleanVar(String condition, Scope scope) throws GeneralException {
-        if (scope.isVariableInScope(condition)){
+        if (scope.isVariableInScope(condition)) {
             Variable variableCondition = scope.getScopeVariableByName(condition);
-            if (!(variableCondition.isInitialised() && variableCondition.getType().matches(BOOLEAN_RECOGNIZER_REGEX))){
-                throw new GeneralException("invalid boolean condition statement");
+            if (variableCondition.isInitialised() && variableCondition.getType().matches(BOOLEAN_RECOGNIZER_REGEX)) {
+                return;
             }
+        } else if (condition.matches(BOOLEAN_RECOGNIZER_REGEX)){
+            return;
         }
         throw new GeneralException("invalid boolean condition statement");
+
     }
 
     public static void checkLoopTitle(String line, Scope scope) throws GeneralException {
@@ -193,7 +196,10 @@ public class LineParser {
         checkValidBooleanCondition(line, scope);
     }
 
-
+//    public static void main(String[] args) throws  GeneralException {
+//        InnerScope innerScope = new InnerScope();
+//        checkLoopTitle("if ( true | false) { ", innerScope);
+//    }
 
 
 

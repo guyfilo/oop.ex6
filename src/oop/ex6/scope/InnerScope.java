@@ -27,6 +27,11 @@ public class InnerScope extends Scope {
         this.scopeFirstLineIdx = 0;
     }
 
+    public InnerScope(){
+        lines = null;
+        scopeFirstLineIdx = 0;
+    }
+
     public int checkValidScope() throws GeneralException {
         int curLineIdx = this.scopeFirstLineIdx;
         while (curLineIdx < this.lines.size()) {
