@@ -6,6 +6,9 @@ import oop.ex6.GeneralException;
 import oop.ex6.jacasvariable.Argument;
 import oop.ex6.jacasvariable.VariableFactory;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 //_______________________________________CLASS______________________________________________________________//
@@ -23,6 +26,9 @@ public class MethodFactory {
     private final static String METHOD_NAME_REGEX = "^[a-zA-Z]++\\w*+$";
     private final static String METHOD_ARGS = "^\\s*+(?: *+\\w++ ++\\w++ *+)?+(?:, *+\\w++ ++\\w++ *+)*$";
 
+    private final static Set<String> RESERVED_KEYWORD = new HashSet<>(Arrays.asList("int", "double", "String", "char",
+            "boolean", "final", "void", "if", "while", "true", "false", "return"));
+
 
     // patterns:
 
@@ -35,7 +41,7 @@ public class MethodFactory {
     private final static String BAD_ARG_MSG = "illegal method argument declaration";
 
     //others:
-    private final static String GENERIC_RETURN_VALUE = "void"; //todo:?
+    private final static String GENERIC_RETURN_VALUE = "void";
     private final static String COMMA = ",";
     private final static int FIRST = 1;
     private final static int SECOND = 2;
@@ -62,7 +68,7 @@ public class MethodFactory {
         if (!matcher.group(1).equals(GENERIC_RETURN_VALUE)){
             throw new MethodException(RETURN_VAL_MSG);
         }
-        if (!matcher.group(2).matches(METHOD_NAME_REGEX)){
+        if (!matcher.group(2).matches(METHOD_NAME_REGEX) || RESERVED_KEYWORD.contains(matcher.group(2))){
             throw new MethodException(RETURN_VAL_MSG);
         }
         ArrayList<Argument> arguments = new ArrayList<>();
@@ -72,12 +78,14 @@ public class MethodFactory {
                 Matcher argMatcher = Pattern.compile(ARG_REGEX).matcher(arg);
                 argMatcher.matches();
                 arguments.add(
-                        VariableFactory.createNewArg(argMatcher.group(SECOND), argMatcher.group(FIRST), false));
+                        VariableFactory.createNewArg(argMatcher.group(SECOND), argMatcher.group(FIRST),
+                                false));
             } else if (arg.matches(FINAL_ARG_REGEX)) {
                 Matcher argMatcher = Pattern.compile(FINAL_ARG_REGEX).matcher(arg);
                 argMatcher.matches();
                 arguments.add(
-                        VariableFactory.createNewArg(argMatcher.group(SECOND), argMatcher.group(FIRST), true));
+                        VariableFactory.createNewArg(argMatcher.group(SECOND), argMatcher.group(FIRST),
+                                true));
             } else if (arg.matches(EMPTY_ARG_REGEX) && args.length == FIRST) {
             }  else {
                 throw new MethodException(BAD_ARG_MSG);

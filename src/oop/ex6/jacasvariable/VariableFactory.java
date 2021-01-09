@@ -5,7 +5,10 @@ package oop.ex6.jacasvariable;//import oop.ex6.jacasvariable.Variable;
 //______________________________________IMPORTS_____________________________________________________________//
 import oop.ex6.scope.Scope;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 //_______________________________________CLASS______________________________________________________________//
 
@@ -61,7 +64,7 @@ public class VariableFactory {
         typeRecognizerDict.put(CHAR_TYPE, CHAR_RECOGNIZER);
     }
 
-    protected static final HashMap<String, String> VALID_TYPES_INITIALIZE;
+    private static final HashMap<String, String> VALID_TYPES_INITIALIZE;
 
     static {
         VALID_TYPES_INITIALIZE = new HashMap<>();
@@ -71,6 +74,11 @@ public class VariableFactory {
         VALID_TYPES_INITIALIZE.put(STRING_TYPE, STRING_TYPE);
         VALID_TYPES_INITIALIZE.put(CHAR_TYPE, CHAR_TYPE);
     }
+
+    private final static Set<String> RESERVED_KEYWORD = new HashSet<>(Arrays.asList("int", "double",
+            "String", "char", "boolean", "final", "void", "if", "while", "true", "false", "return"));
+
+
     //************************************ FUNCTIONS *******************************************************//
 
     /**
@@ -160,7 +168,7 @@ public class VariableFactory {
      * @return true - if the variable name is valid, false - otherwise
      */
     private static void checkValidName(String variableName) throws VariableException {
-        if (!variableName.matches(NAME_RECOGNIZER)) {
+        if (!variableName.matches(NAME_RECOGNIZER) || RESERVED_KEYWORD.contains(variableName)) {
             throw new VariableException(INVALID_VARIABLE_NAME_PREFIX + variableName);
         }
     }

@@ -1,5 +1,5 @@
-String a;
+char a;
 void foo(final String b){
-a = "a a";
+a = ';';
 return;
 }
