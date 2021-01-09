@@ -36,6 +36,15 @@ public class VariableFactory {
     // error messages:
     private final static String INVALID_VARIABLE_DECLARATION = "variable declaration is not valid";
     private final static String INVALID_ARGUMENTS_DECLARATION = "argument declaration is not valid";
+    private final static String NOT_INITIALIZE_CANT_BE_FINAL = "try to declare uninitialised final variable";
+    private final static String VARIABLE_INVALID_TYPE = "try to declare variable with invalid type value";
+    private final static String INVALID_VARIABLE_NAME_PREFIX = "invalid variable name: ";
+    private final static String INVALID_TYPE = "invalid type";
+    private final static String INITIALIZE_WITH_NOT_INITIALIZE_VARIABLE = "try to initialise with " +
+            "uninitialised variable";
+    private final static String WRONG_INITIALIZED_VALUE = "try to initialise new variable with wrong type " +
+            "other variable";
+
 
     // type recognizer dict
     private static final HashMap<String, String> typeRecognizerDict;
@@ -66,12 +75,11 @@ public class VariableFactory {
 
     /**
      * checks the validity of the arguments and create new variable from scratch
-     *
-     * @param name
-     * @param type
-     * @param value   if value null uninisielised
-     * @param isFinal
-     * @return
+     * @param name - the argument name
+     * @param type - the argument type
+     * @param value - the argument value
+     * @param isFinal - true if the argument if final, false otherwise
+     * @return the new crated argument (as a variable)
      */
     public static Variable createNewVar(String name, String type, String value, boolean isFinal,
                                         Scope varScope)
@@ -81,8 +89,17 @@ public class VariableFactory {
         return new Variable(name, type, isFinal, typeRecognizerDict.get(type),
                 value != null, varScope);
     }
-//todo: desc
 
+    /**
+     * checks the validity of the arguments and create new variable from another variable
+     * @param otherVar - another variable
+     * @param name - the argument name
+     * @param type - the argument type
+     * @param isFinal - true if the argument if final, false otherwise
+     * @param varScope - the current scope
+     * @return the new crated argument (as a variable)
+     * @throws VariableException - trows if the arg is not valid
+     */
     public static Variable createNewVar
             (Variable otherVar, String name, String type, boolean isFinal, Scope varScope)
             throws VariableException {
@@ -92,7 +109,14 @@ public class VariableFactory {
                 , otherVar.isInitialised(), varScope);
     }
 
-//todo: desc
+    /**
+     * this method creates new argument
+     * @param name - arg name
+     * @param type - arg type
+     * @param isFinal - true if the arg if final, false - otherwise
+     * @return the new created argument
+     * @throws VariableException - trows if the arg name is not valid
+     */
     public static Argument createNewArg(String name, String type, boolean isFinal) throws VariableException {
         if (checkValidType(type)) {
             checkValidName(name);
@@ -112,10 +136,10 @@ public class VariableFactory {
     private static void checkValidValueType(String variableType, String variableValue, boolean isFinal)
             throws VariableException {
         if (variableValue == null && isFinal){
-            throw new VariableException("try to declare uninitialise final variable");
+            throw new VariableException(NOT_INITIALIZE_CANT_BE_FINAL);
         }
         if (variableValue != null && !variableValue.matches(typeRecognizerDict.get(variableType))){
-            throw new VariableException("try to declare variable with invalid type value");
+            throw new VariableException(VARIABLE_INVALID_TYPE);
         }
     }
 
@@ -137,19 +161,25 @@ public class VariableFactory {
      */
     private static void checkValidName(String variableName) throws VariableException {
         if (!variableName.matches(NAME_RECOGNIZER)) {
-            throw new VariableException("invalid variable name: " + variableName);
+            throw new VariableException(INVALID_VARIABLE_NAME_PREFIX + variableName);
         }
     }
 
+    /**
+     * checks if the given variable is from the demanded type
+     * @param type - a given type
+     * @param otherVar - another variable
+     * @throws VariableException - trows if the type is not valid
+     */
     public static void checkValidOtherVar(String type ,Variable otherVar) throws VariableException {
         if (!otherVar.isInitialised()){
-            throw new VariableException("try to initialise with uninitialised variable");
+            throw new VariableException(INITIALIZE_WITH_NOT_INITIALIZE_VARIABLE);
         }
         if (!VALID_TYPES_INITIALIZE.containsKey(type)){
-            throw new VariableException("invalid type");
+            throw new VariableException(INVALID_TYPE);
         }
         if (!otherVar.getType().matches(VALID_TYPES_INITIALIZE.get(type))){
-            throw new VariableException("try to initialise with wrong type variable");
+            throw new VariableException(WRONG_INITIALIZED_VALUE);
         }
     }
 
