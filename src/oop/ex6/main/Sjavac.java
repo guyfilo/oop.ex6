@@ -21,11 +21,11 @@ public class Sjavac {
             return "0";
         } catch (IOException error) {
             System.out.println(INVALID_INPUT_OUTPUT_NUMERIC_VALUE);
-            System.out.println(error.getMessage());
+            System.err.println(error.getMessage());
             return "2";
         } catch (GeneralException error) {
             System.out.println(INVALID_SJAVA_FILE_NUMERIC_VALUE);
-            System.out.println(error.getMessage());
+            System.err.println(error.getMessage());
             return "1";
         }
     }

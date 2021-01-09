@@ -16,7 +16,7 @@ public class MainScope extends Scope {
     private final Map<String, Method> programMethods = new HashMap<>();
     private LineNumberReader fileReader;
     private String line;
-    private final static String COMMENT_LINE_REGEX = "^\\/\\/";
+    private final static String COMMENT_LINE_REGEX = "^\\/\\/.*+$";
     private final static String VAR_DECLARATION_REGEX = "^[^;]*+;\\s*+$";
     private final static String NEW_SCOPE_REGEX = "^[^{]*+\\{\\s*+$";
     private final static String END_SCOPE_REGEX = "^[^}]*+}\\s*+$";

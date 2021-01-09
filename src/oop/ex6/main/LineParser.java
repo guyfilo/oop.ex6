@@ -5,6 +5,7 @@ import oop.ex6.jacasvariable.Variable;
 import oop.ex6.jacasvariable.VariableFactory;
 import oop.ex6.scope.InnerScope;
 import oop.ex6.scope.Scope;
+import oop.ex6.scope.ScopeException;
 
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -27,11 +28,13 @@ public class LineParser {
     private final static Pattern UNINITIALISED_VAR = Pattern.compile("^\\s*+(\\w++)\\s*+$");
     private final static Pattern INITIALISED_VAR = Pattern.compile("^\\s*+(\\w++)\\s*+=\\s*+(\\S++)\\s*+$");
     private final static String FIRST_WORD_IS_IF_OR_WHILE_REGEX = "^[^}]*+}\\s*+$";
-    private final static String LOOP_PREFIX_REGEX = "^\\s*(?:if|while)\\s+\\(([^\\)]++)\\)\\s*+\\{\\s*+$";
+    private final static String LOOP_PREFIX_REGEX = "^\\s*(?:if|while)\\s*+\\(([^\\)]++)\\)\\s*+\\{\\s*+$";
     private final static String LOOP_BOOLEAN_CONDITION_REGEX = "^\\s*(?:if|while)\\s+\\(([^\\)]++)\\)\\s*+\\{\\s*+$";
     private final static String NUM = "^\\s*+\\d+\\s*+$";
     private final static String BOOLEAN_RECOGNIZER_REGEX = "^\\btrue\\b|\\bfalse\\b|-?\\d+.?\\d*$";
     private final static String TYPE_SERVES_AS_BOOLEAN_REGEX = "^\\bint\\b|\\bdouble\\b|\\bboolean\\b|-?\\d+.?\\d*$";
+    private final static String EMPTY_LINE_REGEX = "^\\s*+$";
+    private final static String COMMENT_LINE_REGEX = "^\\/\\/.*+$";
 
 
 
@@ -120,7 +123,7 @@ public class LineParser {
                 }
             }
         }
-        return false;
+        throw new ScopeException("invalid declaration line");
     }
 
     public static void checkDeclarationLine(String declarationLine, InnerScope scope) throws GeneralException {
@@ -206,11 +209,11 @@ public class LineParser {
         checkValidBooleanCondition(line, scope);
     }
 
-//    public static void main(String[] args) throws  GeneralException {
-//        InnerScope innerScope = new InnerScope();
-//        checkLoopTitle("if ( true | false) { ", innerScope);
-//    }
+    public static boolean  isEmptyLine(String line){
+        return line.matches(EMPTY_LINE_REGEX);
+    }
 
-
-
+    public static boolean isCommentLine(String line){
+        return line.matches(COMMENT_LINE_REGEX);
+    }
 }

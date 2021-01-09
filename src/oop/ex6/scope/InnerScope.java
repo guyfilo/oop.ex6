@@ -49,8 +49,9 @@ public class InnerScope extends Scope {
                 InnerScope innerScope = new InnerScope(this.lines, this,
                         ++curLineIdx);
                 curLineIdx = innerScope.checkValidScope();
+            } else if (!LineParser.isEmptyLine(line) && !LineParser.isCommentLine(line)){
+                throw new InnerScopeException("Problem in line within inner scope");
             }
-            else throw new InnerScopeException("Problem in line within inner scope");
             curLineIdx ++;
         }
         throw new InnerScopeException("Inner scope doesn't ends properly");
