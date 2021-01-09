@@ -3,7 +3,8 @@ package oop.ex6.jacasvariable;//import oop.ex6.jacasvariable.Variable;
 
 
 //______________________________________IMPORTS_____________________________________________________________//
-import oop.ex6.method.MethodException;
+import oop.ex6.scope.Scope;
+
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,7 +22,7 @@ public class VariableFactory {
     // variables types patterns
     private final static Pattern INT_RECOGNIZER = Pattern.compile("^-?\\d++$");
     private final static Pattern DOUBLE_RECOGNIZER = Pattern.compile("^-?\\d+.?\\d*+$");
-    private final static Pattern BOOLEAN_RECOGNIZER = Pattern.compile("^\\btrue\\b|\\bfalse\\b|\\d+.?\\d*$");
+    private final static Pattern BOOLEAN_RECOGNIZER = Pattern.compile("^\\btrue\\b|\\bfalse\\b|-?\\d+.?\\d*$");
     private final static Pattern CHAR_RECOGNIZER = Pattern.compile("^'.?'$");
     private final static Pattern STRING_RECOGNIZER = Pattern.compile("^\".*?\"$");
 
@@ -55,21 +56,21 @@ public class VariableFactory {
      * @param isFinal
      * @return
      */
-    public static Variable createNewVar(String name, String type, String value, boolean isFinal)
+    public static Variable createNewVar(String name, String type, String value, boolean isFinal, Scope varScope)
             throws VariableException {
         if (checkValidName(name) && checkValidValueType(type, value)) {
             return new Variable(name, type, isFinal, typeRecognizerDict.get(type),
-                    value != null);
+                    value != null, varScope);
         } else {
             throw new VariableException("variable declaration is not valid");
         }
     }
 
-    public static Variable createNewVar(Variable otherVar, String name, String type, boolean isFinal)
+    public static Variable createNewVar(Variable otherVar, String name, String type, boolean isFinal, Scope varScope)
             throws VariableException {
         if (checkValidName(name) && type.equals(otherVar.getType()) && otherVar.isInitialised()) {
             return new Variable(name, type, isFinal, typeRecognizerDict.get(type)
-                    , otherVar.isInitialised());
+                    , otherVar.isInitialised(), varScope);
         } else {
             throw new VariableException("variable declaration is not valid");
         }

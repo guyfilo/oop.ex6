@@ -2,9 +2,8 @@
 package oop.ex6.jacasvariable;
 
 //______________________________________IMPORTS_____________________________________________________________//
-import oop.ex6.method.MethodException;
+import oop.ex6.scope.Scope;
 
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,6 +21,7 @@ public class Variable {
     private final String name;
     private boolean initialised;
     private final Pattern typeRecognizer;
+    private final Scope varScope;
 
 //************************************* FUNCTIONS **********************************************************//
 
@@ -32,13 +32,15 @@ public class Variable {
      * @param isFinal
      * @param typeRecognizer
      * @param initialised
+     * @param varScope
      */
-    public Variable(String name, String type, boolean isFinal, Pattern typeRecognizer, boolean initialised) {
+    public Variable(String name, String type, boolean isFinal, Pattern typeRecognizer, boolean initialised, Scope varScope) {
         this.type = type;
         this.name = name;
         this.isFinal = isFinal;
         this.typeRecognizer = typeRecognizer;
         this.initialised = initialised;
+        this.varScope = varScope;
     }
 
     /**
@@ -109,8 +111,11 @@ public class Variable {
         this.initialised = true;
     }
 
-//todo: 2 versions - in one gets param and in the other string
+    public Scope getVarScope() {
+        return varScope;
+    }
 
+    //todo: 2 versions - in one gets param and in the other string
 
 
 }

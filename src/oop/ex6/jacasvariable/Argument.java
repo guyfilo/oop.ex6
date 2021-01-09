@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 public class Argument extends Variable{
     public Argument(String name, String type, boolean isFinal, Pattern typeRecognizer) {
-        super(name, type, isFinal, typeRecognizer, false);
+        super(name, type, isFinal, typeRecognizer, false, varScope);
     }
 
 

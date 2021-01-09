@@ -1,12 +1,9 @@
 package oop.ex6.main;
-
 import oop.ex6.GeneralException;
 import oop.ex6.jacasvariable.Variable;
 import oop.ex6.jacasvariable.VariableFactory;
 import oop.ex6.scope.InnerScope;
 import oop.ex6.scope.Scope;
-
-import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -65,7 +62,7 @@ public class LineParser {
                 Matcher varMatcher = UNINITIALISED_VAR.matcher(declaration);
                 if (varMatcher.matches()){
                     Variable newVar = VariableFactory.createNewVar
-                            (varMatcher.group(1), type, null, isFinal);
+                            (varMatcher.group(1), type, null, isFinal, scope);
                     scope.addNewVar(newVar);
                     continue;
                 }
@@ -75,10 +72,10 @@ public class LineParser {
                     if (scope.isVariableInScope(varMatcher.group(2))){
                         Variable otherVar = scope.getScopeVariableByName(varMatcher.group(2));
                         newVar = VariableFactory.createNewVar
-                                (otherVar, varMatcher.group(1), type, isFinal);
+                                (otherVar, varMatcher.group(1), type, isFinal, scope);
                     } else {
                         newVar = VariableFactory.createNewVar
-                                (varMatcher.group(1), type, varMatcher.group(2), isFinal);
+                                (varMatcher.group(1), type, varMatcher.group(2), isFinal, scope);
                     }
                     scope.addNewVar(newVar);
                     continue;
@@ -145,10 +142,4 @@ public class LineParser {
     public static boolean checkIfPrefixIsIfOrWhile(String line){
         return line.matches(LOOP_PREFIX_REGEX);
     }
-
-
-
-
-
-
 }

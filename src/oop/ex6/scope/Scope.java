@@ -6,15 +6,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class Scope {
-    private final Map<String, Variable> scopeVariables = new HashMap<>();
-    private Map<String, Method> scopeMethods = new HashMap<>();
+    private final Map<String, Variable> scopeVariables;
+    private final Map<String, Method> scopeMethods;
 
-    public Scope(Map<String, Method> scopeMethods){
+    public Scope(){
+        scopeVariables = new HashMap<>();
+        scopeMethods = new HashMap<>();
+    }
+
+    public Scope(Map<String, Method> scopeMethods, Map<String, Variable> scopeVariables){
         this.scopeMethods = scopeMethods;
+        this.scopeVariables = scopeVariables;
+    }
+
+    public Scope(Scope otherScope){
+        this.scopeMethods = otherScope.getScopeMethods();
+        this.scopeVariables = new HashMap<>();
+        this.scopeVariables.putAll(otherScope.scopeVariables);
     }
 
     public void addNewVar(Variable newVariable) throws ScopeException {
-        if (!scopeVariables.containsKey(newVariable.getName())){
+        if (!isVariableDeclaredInScope(newVariable.getName())){
            scopeVariables.put(newVariable.getName(), newVariable);
            return;
         }
@@ -25,9 +37,21 @@ public abstract class Scope {
         return scopeVariables;
     }
 
-    public abstract boolean isVariableInScope(String variableName);
+    public boolean isVariableDeclaredInScope(String variableName) throws ScopeException {
+        return isVariableInScope(variableName) &&
+                this.equals(getScopeVariableByName(variableName).getVarScope());
+    }
 
-    public abstract Variable getScopeVariableByName(String variableName);
+    public boolean isVariableInScope(String variableName){
+        return scopeVariables.containsKey(variableName);
+    }
+
+    public Variable getScopeVariableByName(String variableName) throws ScopeException {
+        if (isVariableInScope(variableName)){
+            return scopeVariables.get(variableName);
+        }
+        throw new ScopeException("this variable not exist in this scope");
+    }
 
     public Map<String, Method> getScopeMethods() {
         return scopeMethods;
