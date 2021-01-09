@@ -92,7 +92,7 @@ public class LineParser {
         throw new GeneralException(INVALID_VARIABLE_CHANGE);
     }
 
-    //todo: change to scope
+
     private static void declareNewVar
             (String varLine, String type, boolean isFinal, Scope scope) throws GeneralException {
             Matcher varDeclaration = Pattern.compile(type + VAR_DECLARATION_REGEX).matcher(varLine);
@@ -206,9 +206,6 @@ public class LineParser {
         return line.matches(NEW_SCOPE_REGEX);
     }
 
-    public boolean checkLoopLine(String line, Map<String, Variable> scopeVariables ){
-        return false; //todo: write check
-    }
 
     /**
      * checks if the line is declaration on "if" or "while" loop

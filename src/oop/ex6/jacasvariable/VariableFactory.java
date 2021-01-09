@@ -34,7 +34,6 @@ public class VariableFactory {
 
     // variable valid name pattern
     private final static String NAME_RECOGNIZER = "^[a-zA-Z]\\w*+|_\\w++$";
-    //todo:add save word check
 
     // error messages:
     private final static String INVALID_VARIABLE_DECLARATION = "variable declaration is not valid";
@@ -155,9 +154,8 @@ public class VariableFactory {
      * this method checks if a type is a valid type
      * @param type - a given type
      * @return true - if the type is valid, false - otherwise
-     * @throws VariableException - trows if the type is not valid
-     */
-    public static boolean checkValidType(String type) throws VariableException {
+     * */
+    public static boolean checkValidType(String type) {
         return typeRecognizerDict.containsKey(type);
     }
 

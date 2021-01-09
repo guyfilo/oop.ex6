@@ -14,7 +14,6 @@ import java.util.Scanner;
 import java.util.stream.Stream;
 
 public class tester {
-    // TODO - change the TESTS_DIR_PATH to the absolut path to "test" dir on your pc.
     private static final String TEST_DIR_PATH = "/Users/guyfilo/IdeaProjects/EX6_FINAL";
 
     public static void main(String[] args) throws Exception {

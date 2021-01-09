@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 //_______________________________________CLASS______________________________________________________________//
-//todo: delete all class exceptions and leave only the general one?
+
 /**
  * this class creates an method object
  */
@@ -110,14 +110,6 @@ public class Method {
         return true;
     }
 
-    //todo: delete?
-    private void checkValidArgAsStringType(String argValidType, String arg) throws MethodException {
-        Pattern typeRecognizer = typeRecognizerDict.get(argValidType);
-        Matcher m = typeRecognizer.matcher(arg);
-        if (!m.matches()) {
-            throw new MethodException(INVALID_ARG_ERR_MSG);
-        }
-    }
 
     /**
      * @return all the methods lines array
