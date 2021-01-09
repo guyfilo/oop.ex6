@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 //_______________________________________CLASS______________________________________________________________//
-
+//todo: delete all class exceptions and leave only the general one?
 /**
  * this class creates an method object
  */
@@ -80,9 +80,9 @@ public class Method {
      * this method checks if the method call is valid
      * @param argsLine - the args the method is calling with
      * @param scopeVariables - the scope variables
-     * @return
-     * @throws MethodException
-     * @throws VariableException
+     * @return - true iff the method call is valid
+     * @throws MethodException - if the given args are invalid
+     * @throws VariableException - if a given arg is invalid variable
      */
     public boolean checkMethodCall(String argsLine, Map<String, Variable> scopeVariables)
             throws MethodException, VariableException {
@@ -110,19 +110,25 @@ public class Method {
         return true;
     }
 
-
+    //todo: delete?
     private void checkValidArgAsStringType(String argValidType, String arg) throws MethodException {
         Pattern typeRecognizer = typeRecognizerDict.get(argValidType);
         Matcher m = typeRecognizer.matcher(arg);
         if (!m.matches()) {
-            throw new MethodException("Method arg has invalid type");
+            throw new MethodException(INVALID_ARG_ERR_MSG);
         }
     }
 
+    /**
+     * @return all the methods lines array
+     */
     public ArrayList<String> getMethodLines() {
         return methodLines;
     }
 
+    /**
+     * @return the method arguments
+     */
     public ArrayList<Argument> getArguments() {
         return arguments;
     }
