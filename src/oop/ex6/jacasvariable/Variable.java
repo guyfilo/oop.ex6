@@ -4,7 +4,6 @@ package oop.ex6.jacasvariable;
 //______________________________________IMPORTS_____________________________________________________________//
 import oop.ex6.scope.Scope;
 
-import javax.print.attribute.standard.MediaSize;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,13 +26,13 @@ public class Variable {
 //************************************* FUNCTIONS **********************************************************//
 
     /**
-     * this class is the variable contracture
+     * this class is the variable contracture for creating a new variable object from sketch
      * @param name - the variable name
      * @param type - the variable type
-     * @param isFinal
-     * @param typeRecognizer
-     * @param initialised
-     * @param varScope
+     * @param isFinal - true - if the variable is final, false - otherwise
+     * @param typeRecognizer - a Pattern object with regex suits to the variable type
+     * @param initialised - true - if the variable is initialized, false - otherwise
+     * @param varScope - the scope the variable belongs to
      */
     public Variable(String name, String type, boolean isFinal, Pattern typeRecognizer, boolean initialised, Scope varScope) {
         this.type = type;
@@ -44,7 +43,10 @@ public class Variable {
         this.varScope = varScope;
     }
 
-
+    /**
+     * this class is the variable contracture for creating a new variable object with other variable
+     * @param otherVariable - the variable that the current is initialised with
+     */
     public Variable(Variable otherVariable){
         this.type = otherVariable.type;
         this.name = otherVariable.name;
@@ -54,6 +56,11 @@ public class Variable {
         this.varScope = otherVariable.varScope;
     }
 
+    /**
+     * contractor for creating variables that are method arguments
+     * @param argument - an argument object
+     * @param scope - the scope the argument belongs to
+     */
     public Variable(Argument argument, Scope scope){
         this.type = argument.getType();
         this.name = argument.getName();
@@ -87,18 +94,27 @@ public class Variable {
         return this.isFinal;
     }
 
+    /**
+     * this method return the Pattern with a regex that suits the variable type
+     * @return the Pattern with a regex that suits the variable type
+     */
     public Pattern getTypeRecognizer() {
         return typeRecognizer;
     }
 
+    /**
+     * this method return if the variable is initialized
+     * @return - true - if its initialized, false - otherwise
+     */
     public boolean isInitialised() {
         return initialised;
     }
 
     /**
-     * this method checks if the variable can get a new value
+     * this method checks if the variable can get a new given value, and is so it updated the value initialized
+     * field to ture
      * @param newValue - a requested value for the variable
-     * @return
+     * @return - true iff the variable can get a new value
      */
     public void changeValue(String newValue) throws VariableException {
         if (this.isFinal){
@@ -113,9 +129,9 @@ public class Variable {
 
 
     /**
-     * this method checks if the variable can get a new value
+     * this method checks if the variable can get a new value as the value of another parameter
      * @param otherVar - a requested value for the variable
-     * @return
+     * @return - true iff the variable can get a new value
      */
     public void changeValue(Variable otherVar) throws VariableException {
         if (this.isFinal){
@@ -131,11 +147,14 @@ public class Variable {
         this.initialised = true;
     }
 
+    /**
+     * this method returns the scope that the variable is belongs to
+     * @return the scope that the variable is belongs to
+     */
     public Scope getVarScope() {
         return varScope;
     }
 
-    //todo: 2 versions - in one gets param and in the other string
 
 
 }
