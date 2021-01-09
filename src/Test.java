@@ -34,17 +34,17 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class Test {
-    // guy:
-    // enter here the path to tests directory
-//    public static final String testDirPath = "/Users/guyfilo/IdeaProjects/EX6_FINAL/test_files";
-//    // enter here the path to sjavac_tests.txt
-//    public static final String exceptedFilePath = "/Users/guyfilo/IdeaProjects/EX6_FINAL/src/sjavac_tests.txt";
-
-    // noa:
-    // enter here the path to tests directory
-    public static final String testDirPath = "/Users/noaabarbanel/IdeaProjects/oop.ex6/test_files";
+//     guy:
+//     enter here the path to tests directory
+    public static final String testDirPath = "/Users/guyfilo/IdeaProjects/EX6_FINAL/test_files";
     // enter here the path to sjavac_tests.txt
-    public static final String exceptedFilePath = "/Users/noaabarbanel/IdeaProjects/oop.ex6/src/sjavac_tests.txt";
+    public static final String exceptedFilePath = "/Users/guyfilo/IdeaProjects/EX6_FINAL/src/sjavac_tests.txt";
+
+//    // noa:
+//    // enter here the path to tests directory
+//    public static final String testDirPath = "/Users/noaabarbanel/IdeaProjects/oop.ex6/test_files";
+//    // enter here the path to sjavac_tests.txt
+//    public static final String exceptedFilePath = "/Users/noaabarbanel/IdeaProjects/oop.ex6/src/sjavac_tests.txt";
 
 
     public static void main(String[] args) {
@@ -78,7 +78,8 @@ public class Test {
                     String fileResult = filesLines.get(file.getName());
                     String expectadResult = fileResult.split(" ")[1];
                     if (!expectadResult.equals(result)){
-                        System.out.println("expected: " + expectadResult + ", actual : " + result +  ",in file: " + fileResult);
+                        System.out.println("expected: " + expectadResult + ", actual : "
+                                + result +  ",in file: " + fileResult);
                         countMistakes++;
                     }  else {
                         System.out.println("paassssed!!!");
