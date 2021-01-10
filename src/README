@@ -100,6 +100,15 @@ start index that would identify the beginning of the specific scoop, to avoid cr
 
 The scope verifies the code lines within it, with thw help of LineParser.
 
+Alternative design options:
+we thought of creating a class for each Variable type with its own functions - this would make the code less
+modular and less readable. Another alternative we had, and in fact our initial design included it, was to
+build for-loop and if-loop classes that inherit the inner scope. After writing them, we realized that they are
+not necessary, since the content of these loops is the same as the method content and therefore there is no
+need to produce a loop object. Another thought we had was to produce a lineParser for each package with the
+appropriate functions for the package. Finally we decided to build a single LineParser and so the LineParser
+like the factory is a kind of black box that centralizes the tests of all the lines.
+
 
 =============================
 =    Answers to questions   =
