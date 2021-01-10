@@ -1,0 +1,176 @@
+guy.filo
+noa_abarbanel
+
+=============================
+=      File description     =
+=============================
+
+javacsvariable package - This package is composed of all the variable related classes
+-----------------------------------------------------------------
+Argument.java - an argument object, extends variable
+Variable.java - an variable object
+VariableException - exception class for exceptions related to invalid variable
+VaraiableFactory - factory for the variable object
+
+
+main package - This package is composed of all classes that runs the program using other classes
+-----------------------------------------------------------------
+InvalidMainArguments.java - exception class for exceptions related to the program arguments
+LineParser.java - Handles raw s-java syntax lines
+SJavac.java - The class which holds the main method
+
+
+method package - This package is composed of all the method related classes
+--------------------------------------------------------------------------
+Method.java - an method object
+MethodFactory.java - The method factory, creates all of the functions
+MethodException - exception class for exceptions related to invalid methods
+
+
+scope package - This package includes classes of objects that acts like scopes
+--------------------------------------------------------------------------
+Scope.java - an abstract class of a scope object
+MainScope - a class that represent the global scope of the file, extends Scope
+InnerScope - a class that represent the inner scopes of the file (method, "if" and "while" scopes), extends
+             Scope
+InnerScopeException - exception class for exceptions related to invalid methods //todo: delete this class? i think its not necessary to have 2 exception classes in the package
+ScopeException - exception class for exceptions related to scopes
+
+
+GeneralException - general exception class that all the exception classes above extend it
+
+
+=============================
+=  Implementation details   =
+=============================
+We will first give a brief description of the general flow of information throughout the program and then
+delve into the specific classes and design patterns utilized and the design principles they follow.
+
+Three main steps
+1) SJavac main method receives the code file.
+2) MainScope scans the global scope using LineParser object, verifying the general format (suffix, comments,
+blank lines, etc..) of the code lines in the file and creates the appropriate verifies for the different
+methods, inner-blocks, variable assignment,..etc
+3) MainScope scans the inner scopes using LineParser object and InnerScope verifying the specific lines and
+their validation (initializing, final modifiers, referencing variables that exist in the scope, if/while with
+appropriate condition)
+
+Collections used in implementation.
+In the scopes, the methods and variables were held in HashMaps to allow efficient addition and retrieval by String
+during runtime.
+
+
+=============================
+=          Design           =
+=============================
+//todo: add alternatives options to the design
+We saw tree core types of s-java code, code pertaining to variables, methods and scopes.
+
+variables:
+The program runs on each of the lines of code (using the main scope), and if it reaches a line that is
+characterized as a variable declaration line or a variable update line. It checks whether the operation is
+valid using a variable factory.
+
+in the VariableFactory We used two class static data members: one is a HashMap that matches between sjava type
+and the regex that characterizes it, and the other is a HashMap that matches between sjava type and all the
+types that express it (for example that boolean can hold int or double values as well).
+In this way, we eliminated code duplication and unnecessary classes. Furthermore, this simplified the
+construction process since only the VariableFactory is aware of the Variable possibilities. This design
+follows the single choice principle because only the VariableFactory holds the possible Variable
+characterization that may be constructed.
+
+
+methods:
+The program runs on each of the lines of code (using the main scope), and if it reaches a line that is
+characterized as a method declaration line. It checks whether the declaration is valid using a method factory.
+the Method class has a data member of all the method inner line.
+
+
+scopes:
+S-java consists of three types of blocks - if/while, method, and global.
+ First, all scoops inherit Scope, and all their common properties are contained within the Scope (for example
+- adding a variable, checking whether the variable is recognized by the scoop, searching for a method,
+adding a method and more). In this way we avoided duplication of code. each class that extends Scope
+(MainScope and InnerScope) adds to the scope only the methods that are unique to it.
+In addition, each scope instance has two fields that characterize it - the variables of the scope and the
+methods of the scope (these are all those hwo defined outside the scope or within the scope itself).
+
+the MainScope has a data member of all the programMethods in the structure of a HashMap.
+the InnerScope has a data member of all the inner scopes lines. We chose to create this single array, with a
+start index that would identify the beginning of the specific scoop, to avoid creating multiple arrays.
+
+The scope verifies the code lines within it, with thw help of LineParser.
+
+
+
+=============================
+=    Answers to questions   =
+=============================
+
+section 6.1:
+
+how we handled s-Java code errors in this exercise, and why we chose to do so:
+Error handling was done by using exceptions as opposed to using boolean return values since once an error has
+occurred, the program should be halted. In addition, because scopes can be created recursively and exceptions
+allowed the errors to efficiently be bubbled up to the main method and end the program.
+The Exceptions Hierarchy we built:
+The highest level exception is the GeneralException from which the VariableException, MethodException and
+InnerScopeException inherit. This division allows specification of the thrown exception, and able modular
+future changes id demand.
+
+
+section 6.2:
+
+How would you modify your code to add new types of variables (e.g., float)?
+The only 2 modification needed in order to support new types of variables like float are:
+ 1. to add a new type to the VALID_TYPES_INITIALIZED HashMap in the Variable with the suitable types (all the
+ possible types that reflects this type). // todo: this map is also in the factory - maybe remain only one in variable?
+ 2. to add a new type to the typeRecognizerDict HashMap in the VariableFactory with the suitable regex.
+This changes is a direct result of our abidance to the single choice principle.
+
+two features our program currently does not support, and a description of which modifications/extensions you
+would have to make in your code in order to support them:
+1. classes:
+    In order to enable our program to support classes, we would make the following changes and additions:
+    1) To the MainScope class we would add a HashMap data member of the class names with the object of the
+        class.
+    2) For the getGlobalMembers() function in the MainScope class we would add a "if" check
+        (and appropriate regax) whether a given line is a class decleration line.
+    3) To the LineParser class we would add a method that checks whether the class statement line is a valid
+        line.
+    4) We would create a class package, which contains three java files: Class, ClassFactory and ClassException.
+        The class would inherit the scope and the class would have a class data member of all the rows of the class.
+    5) To the MainScope we would add a method that creates a class object. It would create a Class and add to
+        the created class object all the rows of the class (similar to a function created by a method).
+    6) In MainScope there will be a function that checks the validity of ClassScope and it will contain within
+        it the method that checks the validity of methods (as the validity check of the functions contains the
+        validity check of loops)
+2. Different methods’ types (i.e int foo()):
+
+
+
+
+section 6.3:
+description of two main regular expressions we used in our code:
+1) LOOP_PREFIX_REGEX = "^\\s*(?:if|while)\\s*+\\(([^\\)]++)\\)\\s*+\\{\\s*+$";
+    This regax should identify the line that announces the beginning of an "if" or "while" loop.
+    - "^" - search a match from the start of the line.
+    - "\\s*" - there can be zero or more spaces.
+    - "(?:if|while)" - the word "if" or the word "while" should be in the line, after the optional spaces.
+    - "\\s*+" - there can be spaces. "*" - between zero and unlimited times. "+" - without giving back.
+    - "(([^\\)]++)\\)" - first (and only) capturing group, should contain open bracket "(", than everything
+       that is not close bracket ")" (needs to be at least 1 char), and than close bracket ")".
+    - "\\s*+" - zero of more spaces, without giving back.
+    - "\\{" - open scope bracket.
+    - "\\s*+$" - zero of more spaces, without giving back, until the end of the line.
+
+
+2) TYPE_SERVES_AS_BOOLEAN_REGEX = "^\\bint\\b|\\bdouble\\b|\\bboolean\\b|-?\\d+\\.?\\d*$";
+    This reggae is supposed to recognize a Boolean type expression.
+    - "^" - search a match from the start of the line.
+    - "\\bint\\b|\\bdouble\\b|\\bboolean\\b" - one of the words "int", "double" or "boolean" should preform or:
+    - "-?\\d+\\.?\\d" - a full number of a friction number.
+    - "$" - one of these options if the end of the line.
+
+
+
