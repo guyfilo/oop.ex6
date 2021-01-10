@@ -8,7 +8,6 @@ import oop.ex6.scope.InnerScope;
 import oop.ex6.scope.Scope;
 import oop.ex6.scope.ScopeException;
 
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 //_______________________________________CLASS______________________________________________________________//
@@ -24,6 +23,8 @@ public class LineParser {
     private final static String INVALID_LOOP_DECLARATION ="invalid loop declaration statement";
     private final static String INVALID_DECLERATION_LINE = "invalid declaration line";
     private final static String INVALID_BOOLEAN_CONDITION ="invalid boolean condition statement";
+    private final static String MISSING_VARIABLE ="missing variable in declaration line";
+
 
     // regexes:
     private final static String RETURN_LINE_REGEX = "^\\s*+return\\s*+;\\s*+$";
@@ -56,6 +57,10 @@ public class LineParser {
     // others:
     private final static String FINAL = "final";
     private final static int FIRST = 1;
+    private final static int SECOND = 2;
+    private final static String COMMA = ",";
+
+
 
 
 //*********************************** DECELERATIONS ********************************************************//
@@ -97,32 +102,32 @@ public class LineParser {
             (String varLine, String type, boolean isFinal, Scope scope) throws GeneralException {
             Matcher varDeclaration = Pattern.compile(type + VAR_DECLARATION_REGEX).matcher(varLine);
             if (!varDeclaration.find()){
-                throw new GeneralException("declaration line must contain declarations");
+                throw new GeneralException(MISSING_VARIABLE);
             }
-            String[] declarations = varDeclaration.group(1).split(",");
+            String[] declarations = varDeclaration.group(FIRST).split(COMMA);
             for (String declaration : declarations){
                 Matcher varMatcher = UNINITIALISED_VAR.matcher(declaration);
                 if (varMatcher.matches()){
                     Variable newVar = VariableFactory.createNewVar
-                            (varMatcher.group(1), type, null, isFinal, scope);
+                            (varMatcher.group(FIRST), type, null, isFinal, scope);
                     scope.addNewVar(newVar);
                     continue;
                 }
                 varMatcher.usePattern(INITIALISED_VAR);
                 if (varMatcher.matches()){
                     Variable newVar;
-                    if (scope.isVariableInScope(varMatcher.group(2))){
-                        Variable otherVar = scope.getScopeVariableByName(varMatcher.group(2));
+                    if (scope.isVariableInScope(varMatcher.group(SECOND))){
+                        Variable otherVar = scope.getScopeVariableByName(varMatcher.group(SECOND));
                         newVar = VariableFactory.createNewVar
-                                (otherVar, varMatcher.group(1), type, isFinal, scope);
+                                (otherVar, varMatcher.group(FIRST), type, isFinal, scope);
                     } else {
                         newVar = VariableFactory.createNewVar
-                                (varMatcher.group(1), type, varMatcher.group(2), isFinal, scope);
+                                (varMatcher.group(FIRST), type, varMatcher.group(SECOND), isFinal, scope);
                     }
                     scope.addNewVar(newVar);
                     continue;
                 }
-                throw new GeneralException("bad declaration");
+                throw new GeneralException(INVALID_DECLERATION_LINE);
             }
     }
 

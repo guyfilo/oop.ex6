@@ -63,7 +63,6 @@ during runtime.
 =============================
 =          Design           = //TODO: ADD MORE THINGS
 =============================
-//todo: add alternatives options to the design - NOA (CLASS EACH TYPE, LINE PARSER, CLASS FOR IF AND WHILE)
 We saw tree core types of s-java code, code pertaining to variables, methods and scopes.
 
 variables:
@@ -145,11 +144,11 @@ would have to make in your code in order to support them:
     6) In MainScope there will be a function that checks the validity of ClassScope and it will contain within
         it the method that checks the validity of methods (as the validity check of the functions contains the
         validity check of loops)
+
 2.  Inheritage of files:
     we can do it by adding a filed of "inheritedScopes" to the MainScope object,
     and if we get connected files we can sand the sup file MainScope after analyzing it to the sub file
     MainScope and add a check in the getMethodByName if the method in the familiar scopes.
-
 
 
 section 6.3:
