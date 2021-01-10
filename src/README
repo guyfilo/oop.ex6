@@ -33,7 +33,6 @@ Scope.java - an abstract class of a scope object
 MainScope - a class that represent the global scope of the file, extends Scope
 InnerScope - a class that represent the inner scopes of the file (method, "if" and "while" scopes), extends
              Scope
-InnerScopeException - exception class for exceptions related to invalid methods //todo: delete this class? i think its not necessary to have 2 exception classes in the package
 ScopeException - exception class for exceptions related to scopes
 
 
@@ -61,9 +60,9 @@ during runtime.
 
 
 =============================
-=          Design           =
+=          Design           = //TODO: ADD MORE THINGS
 =============================
-//todo: add alternatives options to the design
+//todo: add alternatives options to the design - NOA (CLASS EACH TYPE, LINE PARSER, CLASS FOR IF AND WHILE)
 We saw tree core types of s-java code, code pertaining to variables, methods and scopes.
 
 variables:
@@ -102,7 +101,6 @@ start index that would identify the beginning of the specific scoop, to avoid cr
 The scope verifies the code lines within it, with thw help of LineParser.
 
 
-
 =============================
 =    Answers to questions   =
 =============================
@@ -123,10 +121,10 @@ section 6.2:
 
 How would you modify your code to add new types of variables (e.g., float)?
 The only 2 modification needed in order to support new types of variables like float are:
- 1. to add a new type to the VALID_TYPES_INITIALIZED HashMap in the Variable with the suitable types (all the
- possible types that reflects this type). // todo: this map is also in the factory - maybe remain only one in variable?
+ 1. to add a new type to the VALID_TYPES_INITIALIZED HashMap in the VariableFactory with the suitable types (all the
+ possible types that reflects this type).
  2. to add a new type to the typeRecognizerDict HashMap in the VariableFactory with the suitable regex.
-This changes is a direct result of our abidance to the single choice principle.
+This changes is a direct result of our abidance to the open - close principle.
 
 two features our program currently does not support, and a description of which modifications/extensions you
 would have to make in your code in order to support them:
@@ -145,7 +143,8 @@ would have to make in your code in order to support them:
     6) In MainScope there will be a function that checks the validity of ClassScope and it will contain within
         it the method that checks the validity of methods (as the validity check of the functions contains the
         validity check of loops)
-2. Different methods’ types (i.e int foo()):
+
+2. Different methods’ types (i.e int foo()): //todo:
 
 
 

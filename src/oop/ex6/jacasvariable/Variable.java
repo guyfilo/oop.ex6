@@ -4,8 +4,6 @@ package oop.ex6.jacasvariable;
 //______________________________________IMPORTS_____________________________________________________________//
 import oop.ex6.scope.Scope;
 
-import java.util.HashMap;
-
 //_______________________________________CLASS______________________________________________________________//
 /**
  * this class creates a variable object
@@ -14,21 +12,7 @@ public class Variable {
 
 //*********************************** MAGIC NUMBERS ********************************************************//
 
-    private final static String INT_TYPE = "int";
-    private final static String DOUBLE_TYPE = "double";
-    private final static String BOOLEAN_TYPE = "boolean";
-    private final static String STRING_TYPE = "String";
-    private final static String CHAR_TYPE = "char";
-    protected static final HashMap<String, String> VALID_TYPES_INITILISE;
 
-    static {
-        VALID_TYPES_INITILISE = new HashMap<>();
-        VALID_TYPES_INITILISE.put(INT_TYPE, INT_TYPE);
-        VALID_TYPES_INITILISE.put(DOUBLE_TYPE, INT_TYPE + DOUBLE_TYPE);
-        VALID_TYPES_INITILISE.put(BOOLEAN_TYPE, INT_TYPE + DOUBLE_TYPE + BOOLEAN_TYPE);
-        VALID_TYPES_INITILISE.put(STRING_TYPE, STRING_TYPE);
-        VALID_TYPES_INITILISE.put(CHAR_TYPE, CHAR_TYPE);
-    }
 //*********************************** DECELERATIONS ********************************************************//
     private final boolean isFinal;
     private final String type;

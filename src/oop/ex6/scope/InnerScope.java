@@ -74,11 +74,11 @@ public class InnerScope extends Scope {
                         ++curLineIdx);
                 curLineIdx = innerScope.checkValidScope();
             } else if (!LineParser.isEmptyLine(line) && !LineParser.isCommentLine(line)){
-                throw new InnerScopeException(INVALID_INNER_SCOPE_LINE_ERR_MSG);
+                throw new ScopeException(INVALID_INNER_SCOPE_LINE_ERR_MSG);
             }
             curLineIdx ++;
         }
-        throw new InnerScopeException(SCOPE_END_INVALID_ERR_MSG);
+        throw new ScopeException(SCOPE_END_INVALID_ERR_MSG);
     }
 
 }
