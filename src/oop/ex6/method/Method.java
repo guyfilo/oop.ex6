@@ -6,9 +6,7 @@ import oop.ex6.jacasvariable.Argument;
 import oop.ex6.jacasvariable.Variable;
 import oop.ex6.jacasvariable.VariableException;
 import oop.ex6.main.LineParser;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,7 +34,6 @@ public class Method {
     private String name;
     private ArrayList<Argument> arguments;
     private final ArrayList<String> methodLines = new ArrayList<>();
-    public static HashMap<String, Pattern> typeRecognizerDict;
 //************************************* FUNCTIONS **********************************************************//
 
     /**

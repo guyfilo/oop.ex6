@@ -24,7 +24,6 @@ public class MethodFactory {
     private final static String ARG_REGEX = "^\\s*+(\\w++)\\s++(\\w++)\\s*+$";
     private final static String EMPTY_ARG_REGEX = "^\\s*+$";
     private final static String METHOD_NAME_REGEX = "^[a-zA-Z]++\\w*+$";
-    private final static String METHOD_ARGS = "^\\s*+(?: *+\\w++ ++\\w++ *+)?+(?:, *+\\w++ ++\\w++ *+)*$";
 
     private final static Set<String> RESERVED_KEYWORD = new HashSet<>(Arrays.asList("int", "double", "String", "char",
             "boolean", "final", "void", "if", "while", "true", "false", "return"));

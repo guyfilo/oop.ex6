@@ -33,6 +33,7 @@ Scope.java - an abstract class of a scope object
 MainScope - a class that represent the global scope of the file, extends Scope
 InnerScope - a class that represent the inner scopes of the file (method, "if" and "while" scopes), extends
              Scope
+InnerScopeException - exception class for exceptions related to invalid methods //todo: delete this class? i think its not necessary to have 2 exception classes in the package
 ScopeException - exception class for exceptions related to scopes
 
 
@@ -100,14 +101,6 @@ start index that would identify the beginning of the specific scoop, to avoid cr
 
 The scope verifies the code lines within it, with thw help of LineParser.
 
-Alternative design options:
-we thought of creating a class for each Variable type with its own functions - this would make the code less
-modular and less readable. Another alternative we had, and in fact our initial design included it, was to
-build for-loop and if-loop classes that inherit the inner scope. After writing them, we realized that they are
-not necessary, since the content of these loops is the same as the method content and therefore there is no
-need to produce a loop object. Another thought we had was to produce a lineParser for each package with the
-appropriate functions for the package. Finally we decided to build a single LineParser and so the LineParser
-like the factory is a kind of black box that centralizes the tests of all the lines.
 
 
 =============================
@@ -152,9 +145,10 @@ would have to make in your code in order to support them:
     6) In MainScope there will be a function that checks the validity of ClassScope and it will contain within
         it the method that checks the validity of methods (as the validity check of the functions contains the
         validity check of loops)
-
-2. Different methods’ types (i.e int foo()): //todo:
-
+2.  Inheritage of files:
+    we can do it by adding a filed of "inheritedScopes" to the MainScope object,
+    and if we get connected files we can sand the sup file MainScope after analyzing it to the sub file
+    MainScope and add a check in the getMethodByName if the method in the familiar scopes.
 
 
 

@@ -275,7 +275,6 @@ public class LineParser {
             return;
         }
         throw new GeneralException(INVALID_BOOLEAN_CONDITION);
-
     }
 
     /**
